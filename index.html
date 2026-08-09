@@ -60,16 +60,12 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 
 /* HERO MINIMALISTA */
 .hero{min-height:100vh;height:100vh;background:var(--dark-charcoal);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:0;position:relative;overflow:hidden}
-.hero-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;cursor:default}
-.hero-bg-img.editable{cursor:pointer}
+.hero-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
 .hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,.22);z-index:1}
 .hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:14vh}
 .hero-tag{font-size:var(--fs-body);letter-spacing:.05em;color:var(--bg-white);border:1px solid var(--bg-white);padding:6px 20px;border-radius:var(--r-full);display:inline-block;margin-bottom:24px;text-shadow:0 1px 6px rgba(0,0,0,.25)}
 .hero h1{font-family:var(--font-serif);font-size:var(--fs-hero);font-weight:400;color:var(--bg-white);line-height:1;margin-bottom:12px;letter-spacing:0.01em;text-shadow:0 2px 20px rgba(0,0,0,.3)}
 .hero p{font-size:var(--fs-body);color:var(--bg-white);max-width:700px;line-height:1.8;margin:0 auto 2.5rem;letter-spacing:0.02em;text-shadow:0 1px 8px rgba(0,0,0,.25)}
-.btn-change-cover{position:absolute;bottom:32px;right:32px;z-index:3;background:rgba(255,255,255,.12);color:var(--bg-white);border:1px solid rgba(255,255,255,.5);padding:8px 18px;font-size:16px;border-radius:var(--r-full);backdrop-filter:blur(6px);transition:var(--t);display:none}
-.btn-change-cover:hover{background:rgba(255,255,255,.22)}
-.btn-change-cover.show{display:block}
 .sep{display:flex;align-items:center;gap:16px;margin:20px auto;width:fit-content}
 .sep-line{width:60px;height:1px;background:var(--bg-white);opacity:0.5}
 .scroll-hint{position:absolute;bottom:2.5rem;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:16px;letter-spacing:.05em;color:var(--bg-white);z-index:2;text-shadow:0 1px 6px rgba(0,0,0,.25)}
@@ -269,7 +265,6 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
   .spotify-wrap iframe{height:250px}
   .tab{padding:8px 10px;font-size:10px}
   .csv-row{flex-direction:column}
-  .btn-change-cover{bottom:16px;right:16px;font-size:12px;padding:6px 14px}
 }
 @media(max-width:400px){
   :root{ --fs-hero:40px; }
@@ -312,10 +307,8 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 </div>
 
 <section class="hero" id="sTop">
-  <img class="hero-bg-img" id="heroBgImg" src="" alt="" onclick="W.adm&&W.$('fileIn').click()">
+  <img class="hero-bg-img" id="heroBgImg" src="" alt="">
   <div class="hero-overlay"></div>
-  <input type="file" id="fileIn" accept="image/*" style="display:none">
-  <button class="btn-change-cover" id="btnChangeCover" onclick="W.$('fileIn').click()">Alterar Capa</button>
   <div class="hero-content">
     <div class="hero-tag" id="hTag" style="display:none">Gui &amp; Ana · Salve a Data</div>
     <h1 id="hTitle">Gui &amp; Ana</h1>
@@ -409,8 +402,8 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
         <select id="rA"><option value="">Selecione sua resposta...</option><option value="s">Confirmado! Estarei lá 🎉</option><option value="n">Infelizmente não poderei comparecer</option></select>
       </div>
       <div class="fg" id="rNG" style="display:none">
-        <label>Total de Acompanhantes (incluindo você)</label>
-        <input id="rNum" type="number" min="1" max="20" value="1">
+        <label>Você levará acompanhantes extras?</label>
+        <input id="rNum" type="number" min="0" max="20" value="0">
       </div>
       <div id="rCompanions"></div>
       <button class="btn-main" id="btnRsvp">Validar Presença</button>
@@ -556,6 +549,19 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
     </div>
 
     <div id="pCfg" style="display:none">
+      <div class="fg">
+        <label>Foto de Capa (Hero)</label>
+        <div class="upload-zone" id="heroUploadZone">
+          <div id="cHeroPreviewWrap" class="prev-img-wrap">
+            <img id="cHeroPreview" src="" alt="">
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="fbtn" id="btnUploadHero" type="button">📷 Escolher Foto de Capa</button>
+            <span style="font-size:12px;color:var(--text-muted)">PNG, JPG ou WEBP</span>
+          </div>
+          <input type="file" id="cHeroBgFile" accept="image/*" style="display:none">
+        </div>
+      </div>
       <div class="fg"><label>Identificação Noivo(a) 1</label><input id="cN1" type="text"></div>
       <div class="fg"><label>Identificação Noivo(a) 2</label><input id="cN2" type="text"></div>
       <div class="fg"><label>Data da Cerimônia</label><input id="cDate" type="date"></div>
@@ -652,10 +658,6 @@ function refreshAuthUI(){
   if(rList) rList.style.display = W.adm ? 'block' : 'none';
   var csvRow = W.$('rsvpCsvRow');
   if(csvRow) csvRow.style.display = W.adm ? 'flex' : 'none';
-  var chgBtn = W.$('btnChangeCover');
-  if(chgBtn) chgBtn.classList.toggle('show', !!W.adm);
-  var bgImg = W.$('heroBgImg');
-  if(bgImg) bgImg.classList.toggle('editable', !!W.adm);
 }
 
 W.clickAdmin = function(){
@@ -739,9 +741,6 @@ function applyConfig(){
     if(c.heroBg){ bgImg.src = c.heroBg; }
     else{ bgImg.src = 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop'; }
   }
-  var chgBtn = W.$('btnChangeCover');
-  if(chgBtn) chgBtn.classList.toggle('show', !!W.adm);
-  if(bgImg) bgImg.classList.toggle('editable', !!W.adm);
 }
 
 function startCD(){
@@ -765,18 +764,32 @@ function rsvpRowHtml(r){
       if(c) companionsHtml += '<div style="font-size:11px;color:var(--text-muted);padding-left:8px;margin-top:2px">↳ ' + esc(c) + '</div>';
     });
   }
-  return '<div class="rsvp-row"><div><div>' + esc(r.name) + (r.num > 1 ? ' <small style="color:var(--text-muted)">(+' + (r.num - 1) + ' acomp.)</small>' : '') + '</div>' + companionsHtml + '</div><span class="' + (r.att === 's' ? 'tag-y' : 'tag-n') + '">' + (r.att === 's' ? '✓ Confirmado' : '✗ Não virá') + '</span></div>';
+  return '<div class="rsvp-row"><div><div>' + esc(r.name) + (r.num > 0 ? ' <small style="color:var(--text-muted)">(+' + r.num + ' acompanhante' + (r.num>1?'s':'') + ' extra' + (r.num>1?'s':'') + ')</small>' : '') + '</div>' + companionsHtml + '</div><span class="' + (r.att === 's' ? 'tag-y' : 'tag-n') + '">' + (r.att === 's' ? '✓ Confirmado' : '✗ Não virá') + '</span></div>';
 }
 
+function updComp(){
+  var att = W.$('rA').value, num = parseInt(W.$('rNum').value)||0;
+  W.$('rNG').style.display = att==='s' ? 'block' : 'none';
+  var cf = W.$('rCompanions');
+  if(att!=='s' || num<=0){ cf.innerHTML=''; return; }
+  var h='<div style="font-size:11px;letter-spacing:.06em;color:var(--text-muted);margin:14px 0 10px">Nome dos acompanhantes</div>';
+  for(var i=1;i<=num;i++){
+    h += '<div class="fg"><input type="text" id="rC'+i+'" placeholder="Nome do acompanhante '+i+'"></div>';
+  }
+  cf.innerHTML = h;
+}
+W.$('rA').addEventListener('change', updComp);
+W.$('rNum').addEventListener('input', updComp);
+
 W.$('btnRsvp').addEventListener('click', function(){
-  var name=W.$('rN').value.trim(), att=W.$('rA').value, num=parseInt(W.$('rNum').value)||1;
+  var name=W.$('rN').value.trim(), att=W.$('rA').value, num=parseInt(W.$('rNum').value)||0;
   if(!name||!att){ W.toast('Preencha nome e confirmação.'); return; }
   var comps=[];
-  if(att==='s'&&num>1){ for(var i=1;i<num;i++){ var el=W.$('rC'+i); comps.push(el?el.value.trim():''); } }
+  if(att==='s'&&num>0){ for(var i=1;i<=num;i++){ var el=W.$('rC'+i); comps.push(el?el.value.trim():''); } }
   var r={ id: Date.now().toString(36)+Math.random().toString(36).slice(2,5), name:name, att:att, num:att==='s'?num:0, companions:comps, ts:Date.now() };
   D.rsvps.push(r);
   dbAddRsvp(r);
-  W.$('rN').value=''; W.$('rA').value=''; W.$('rNum').value=1;
+  W.$('rN').value=''; W.$('rA').value=''; W.$('rNum').value=0;
   W.$('rNG').style.display='none'; W.$('rCompanions').innerHTML='';
   renderRSVPs();
   W.toast(att==='s'?'Presença confirmada! 🎉':'Resposta registrada!');
@@ -795,7 +808,7 @@ function renderRSVPs(){
 W.csvRsvp = function(){
   if(!D.rsvps.length){ W.toast('Nenhuma confirmação ainda.'); return; }
   var rows=[['Nome','Situação','Total de Pessoas','Acompanhantes','Data de Confirmação']];
-  D.rsvps.forEach(function(r){ rows.push([r.name, r.att==='s'?'Confirmado':'Não virá', r.num||0, (r.companions||[]).filter(Boolean).join(' | '), fmtDate(r.ts)]); });
+  D.rsvps.forEach(function(r){ rows.push([r.name, r.att==='s'?'Confirmado':'Não virá', r.att==='s'?(1+(r.num||0)):0, (r.companions||[]).filter(Boolean).join(' | '), fmtDate(r.ts)]); });
   dlCsv(rows,'confirmacoes_presenca.csv');
   W.toast('Relatório exportado! ✓');
 };
@@ -957,6 +970,11 @@ function openAdmin(){
   W.$('cTime').value=c.time||''; W.$('cVenue').value=c.venue||''; W.$('cAddr').value=c.addr||'';
   W.$('cMap').value=c.mapUrl||''; W.$('cDress').value=c.dress||''; W.$('cMsg').value=c.msg||'';
   W.$('cSpotify').value=c.spotifyUrl||'';
+  var prev=W.$('cHeroPreview'), prevWrap=W.$('cHeroPreviewWrap');
+  if(prev && prevWrap){
+    if(c.heroBg){ prev.src=c.heroBg; prevWrap.style.display='block'; }
+    else{ prevWrap.style.display='none'; }
+  }
   renderAdminList(); W.aTab('Add');
   W.$('ovAdmin').classList.add('open');
 }
@@ -1125,16 +1143,16 @@ W.$('btnSaveCfg').addEventListener('click', function(){
   W.toast('Configurações atualizadas! ✓');
 });
 
-W.$('fileIn').addEventListener('change',function(e){
+W.$('btnUploadHero').addEventListener('click', function(){ W.$('cHeroBgFile').click(); });
+W.$('cHeroBgFile').addEventListener('change', function(e){
   var f=e.target.files[0]; if(!f)return;
   var r=new FileReader();
-  r.onload=async function(ev){
-    var b64 = ev.target.result;
-    D.cfg.heroBg = b64;
-    var bgImg = W.$('heroBgImg');
-    if(bgImg) bgImg.src = b64;
-    await dbSaveCfg();
-    W.toast('Capa atualizada para todos! ✓');
+  r.onload=function(ev){
+    D.cfg.heroBg = ev.target.result;
+    var prev=W.$('cHeroPreview'), prevWrap=W.$('cHeroPreviewWrap');
+    if(prev){ prev.src = ev.target.result; }
+    if(prevWrap){ prevWrap.style.display='block'; }
+    W.toast('Foto de capa pronta — clique em Atualizar Configurações para salvar. 📷');
   };
   r.readAsDataURL(f);
 });
