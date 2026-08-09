@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Casamento · Gui &amp; Ana</title>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 /* ===== DESIGN SYSTEM MINIMALISTA (BLACK, WHITE & BEIGE) ===== */
@@ -15,43 +15,38 @@
   --dark-charcoal:#111111;
   --text-muted:#666666;
   --border:rgba(17,17,17,0.08);
-  --font-serif:'Libre Bodoni',serif;
-  --font-sans:'Libre Bodoni',serif;
+  --font-serif:'Cormorant Garamond',serif;
+  --font-sans:'Lato',sans-serif;
   --sp-xs:4px; --sp-sm:8px; --sp-md:16px; --sp-lg:24px; --sp-xl:40px; --sp-2xl:64px;
   --r-sm:2px; --r-md:4px; --r-lg:8px; --r-full:999px;
   --shadow-sm:0 2px 12px rgba(0,0,0,.03);
   --shadow-md:0 12px 32px rgba(0,0,0,.06);
   --t:all .22s cubic-bezier(0.25, 1, 0.5, 1);
-  /* Tamanhos rígidos — Regra de Ouro tipográfica */
-  --fs-hero:180px;
-  --fs-nav:32px;
-  --fs-section-title:32px;
-  --fs-body:22px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-*{font-family:'Libre Bodoni',serif !important;font-style:italic !important}
-body{font-family:var(--font-sans);background:var(--bg-light);color:var(--dark-charcoal);font-size:var(--fs-body);line-height:1.65;letter-spacing:0.02em;font-style:italic}
+body{font-family:var(--font-sans);background:var(--bg-light);color:var(--dark-charcoal);font-size:14px;line-height:1.65;letter-spacing:0.02em}
 img{max-width:100%;display:block}
 button{cursor:pointer;font-family:var(--font-sans);border:none;outline:none;background:none}
-input,select,textarea{font-family:var(--font-sans);font-size:var(--fs-body);width:100%;border:1px solid var(--accent-beige);border-radius:var(--r-sm);padding:11px 14px;background:var(--bg-white);color:var(--dark-charcoal);box-sizing:border-box;transition:var(--t);letter-spacing:0.04em;font-style:italic}
+input,select,textarea{font-family:var(--font-sans);font-size:14px;width:100%;border:1px solid var(--accent-beige);border-radius:var(--r-sm);padding:11px 14px;background:var(--bg-white);color:var(--dark-charcoal);box-sizing:border-box;transition:var(--t);letter-spacing:0.04em}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--dark-charcoal);box-shadow:0 0 0 3px rgba(17,17,17,.04)}
 label{display:block;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--dark-charcoal);margin-bottom:6px;font-weight:700}
 .fg{margin-bottom:16px}
 
-/* NAV EDITORIAL — transparente, sobreposta ao hero, links à esquerda */
-nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:auto;display:flex;align-items:center;justify-content:flex-start;position:absolute;top:0;left:0;right:0;z-index:100;backdrop-filter:none;-webkit-backdrop-filter:none}
-.logo{display:none}
-.nav-links{display:flex;gap:32px;align-items:center}
-.nl{padding:0;font-size:var(--fs-nav);letter-spacing:0.01em;text-transform:none;color:var(--bg-white);border-radius:0;transition:var(--t);font-weight:400;text-shadow:0 1px 6px rgba(0,0,0,.25)}
-.nl:hover{color:var(--accent-beige);background:transparent}
-.nav-right{display:flex;align-items:center;gap:12px;margin-left:auto}
-.btn-adm{display:none}
+/* NAV EDITORIAL */
+nav{background:rgba(249,246,240,.96);border-bottom:1px solid var(--border);padding:0 var(--sp-lg);height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.logo{font-family:var(--font-serif);font-size:1.4rem;color:var(--dark-charcoal);letter-spacing:0.05em;white-space:nowrap}
+.nav-links{display:flex;gap:4px}
+.nl{padding:8px 14px;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);border-radius:var(--r-sm);transition:var(--t);font-weight:400}
+.nl:hover{color:var(--dark-charcoal);background:rgba(17,17,17,0.03)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.btn-adm{border:1px solid var(--dark-charcoal);color:var(--dark-charcoal);padding:6px 14px;border-radius:var(--r-sm);font-size:11px;letter-spacing:.12em;text-transform:uppercase;transition:var(--t);white-space:nowrap}
+.btn-adm:hover,.btn-adm.active{background:var(--dark-charcoal);color:var(--bg-white)}
 .hamburger{display:none;flex-direction:column;gap:5px;padding:6px;border-radius:var(--r-sm)}
-.hamburger span{display:block;width:18px;height:1.5px;background:var(--bg-white);transition:var(--t)}
-.mobile-menu{display:none;position:fixed;inset:0;top:0;background:var(--bg-light);z-index:99;padding:var(--sp-lg);flex-direction:column;gap:8px}
+.hamburger span{display:block;width:18px;height:1.5px;background:var(--dark-charcoal);transition:var(--t)}
+.mobile-menu{display:none;position:fixed;inset:0;top:64px;background:var(--bg-light);z-index:99;padding:var(--sp-lg);flex-direction:column;gap:8px}
 .mobile-menu.open{display:flex}
-.mobile-menu .nl{font-size:20px;padding:14px 20px;border-radius:var(--r-sm);border:1px solid var(--border);color:var(--dark-charcoal);background:var(--bg-white);text-shadow:none}
+.mobile-menu .nl{font-size:0.9rem;padding:14px 20px;border-radius:var(--r-sm);border:1px solid var(--border);color:var(--dark-charcoal);background:var(--bg-white)}
 
 /* ADMIN BAR */
 .admin-bar{display:none;background:var(--dark-charcoal);color:#fff;text-align:center;padding:8px var(--sp-lg);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
@@ -59,21 +54,17 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 .admin-bar button{color:#fff;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:underline;background:none;border:none;cursor:pointer}
 
 /* HERO MINIMALISTA */
-.hero{min-height:100vh;height:100vh;background:var(--dark-charcoal);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0;position:relative;overflow:hidden}
-.hero-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;cursor:default}
-.hero-bg-img.editable{cursor:pointer}
-.hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,.28);z-index:1}
-.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.hero-tag{font-size:var(--fs-body);letter-spacing:.05em;color:var(--bg-white);border:1px solid var(--bg-white);padding:6px 20px;border-radius:var(--r-full);display:inline-block;margin-bottom:24px;text-shadow:0 1px 6px rgba(0,0,0,.25)}
-.hero h1{font-family:var(--font-serif);font-size:var(--fs-hero);font-weight:400;color:var(--bg-white);line-height:1;margin-bottom:12px;letter-spacing:0.01em;text-shadow:0 2px 20px rgba(0,0,0,.3)}
-.hero p{font-size:var(--fs-body);color:var(--bg-white);max-width:700px;line-height:1.8;margin:0 auto 2.5rem;letter-spacing:0.02em;text-shadow:0 1px 8px rgba(0,0,0,.25)}
-.btn-change-cover{position:absolute;bottom:32px;right:32px;z-index:3;background:rgba(255,255,255,.12);color:var(--bg-white);border:1px solid rgba(255,255,255,.5);padding:8px 18px;font-size:16px;border-radius:var(--r-full);backdrop-filter:blur(6px);transition:var(--t);display:none}
-.btn-change-cover:hover{background:rgba(255,255,255,.22)}
-.btn-change-cover.show{display:block}
+.hero{min-height:92vh;background:linear-gradient(180deg, var(--accent-beige) 0%, var(--bg-light) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px var(--sp-lg) 60px;position:relative;overflow:hidden}
+.hero-tag{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--dark-charcoal);border:1px solid var(--dark-charcoal);padding:6px 20px;border-radius:var(--r-full);display:inline-block;margin-bottom:24px;font-weight:700}
+.hero h1{font-family:var(--font-serif);font-size:clamp(3rem,9vw,6rem);font-weight:300;color:var(--dark-charcoal);line-height:1.1;margin-bottom:12px;letter-spacing:0.03em}
+.hero p{font-size:14px;color:var(--text-muted);max-width:520px;line-height:1.8;margin:0 auto 2.5rem;letter-spacing:0.03em}
+.photo-wrap{width:150px;height:140px;border-radius:var(--r-full);background:rgba(17,17,17,0.03);overflow:hidden;display:flex;align-items:center;justify-content:center;margin:0 auto 28px;font-family:var(--font-serif);font-size:2.5rem;color:var(--dark-charcoal);opacity:.8;cursor:pointer;position:relative;transition:var(--t)}
+.photo-wrap:hover{opacity:1;transform:scale(1.02)}
+.photo-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .sep{display:flex;align-items:center;gap:16px;margin:20px auto;width:fit-content}
-.sep-line{width:60px;height:1px;background:var(--bg-white);opacity:0.5}
-.scroll-hint{position:absolute;bottom:2.5rem;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:16px;letter-spacing:.05em;color:var(--bg-white);z-index:2;text-shadow:0 1px 6px rgba(0,0,0,.25)}
-.scroll-line{width:1px;height:40px;background:var(--bg-white);opacity:0.6;animation:sl 2s ease-in-out infinite}
+.sep-line{width:60px;height:1px;background:var(--dark-charcoal);opacity:0.2}
+.scroll-hint{position:absolute;bottom:2.5rem;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted)}
+.scroll-line{width:1px;height:40px;background:var(--dark-charcoal);opacity:0.4;animation:sl 2s ease-in-out infinite}
 @keyframes sl{0%,100%{transform:scaleY(0.3);transform-origin:top;opacity:0.2}50%{transform:scaleY(1);transform-origin:top;opacity:1}}
 
 /* COUNTDOWN BLOCK */
@@ -87,20 +78,18 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 /* SECTIONS BRANCAS CLASSICAS */
 .sec{padding:var(--sp-2xl) var(--sp-lg);max-width:960px;margin:0 auto}
 .sec-head{text-align:center;margin-bottom:3.5rem}
-.sec-tag{font-size:var(--fs-body);letter-spacing:.05em;color:var(--text-muted)}
-.sec-title{font-family:var(--font-serif);font-size:var(--fs-section-title);font-weight:400;color:var(--dark-charcoal);margin-top:8px;letter-spacing:0.01em}
+.sec-tag{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--text-muted);font-weight:700}
+.sec-title{font-family:var(--font-serif);font-size:clamp(2rem,5vw,3rem);font-weight:300;color:var(--dark-charcoal);margin-top:8px;letter-spacing:0.02em}
 
 /* INFO CARDS */
-/* INFO — layout editorial de 2 colunas */
-.info-columns{display:grid;grid-template-columns:1fr 1fr;gap:64px;text-align:left}
-.info-col-title{font-family:var(--font-serif);font-size:var(--fs-section-title);color:var(--dark-charcoal);margin-bottom:20px;letter-spacing:0.01em}
-.info-col p, .info-col li{font-size:var(--fs-body);color:var(--dark-charcoal);line-height:1.7;letter-spacing:0.01em;margin-bottom:16px}
-.info-col .info-subtitle{font-weight:600;margin-bottom:16px}
-.info-col ul{list-style:none;padding:0;margin:0}
-.info-col ul li{margin-bottom:14px;padding-left:0}
-.map-wrap{margin:24px 0;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
-.map-wrap iframe{display:block;width:100%;height:340px;border:none}
-.info-addr{font-size:var(--fs-body);color:var(--dark-charcoal);line-height:1.7}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.info-card{background:var(--bg-white);border:1px solid var(--border);border-radius:var(--r-sm);padding:32px var(--sp-md);text-align:center;box-shadow:var(--shadow-sm);transition:var(--t)}
+.info-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.info-card h3{font-family:var(--font-serif);font-size:1.3rem;color:var(--dark-charcoal);margin:12px 0 6px;font-weight:400}
+.info-card p{font-size:13px;color:var(--text-muted);line-height:1.6}
+.info-detail{font-size:11px;color:var(--dark-charcoal);margin-top:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.map-wrap{margin-top:var(--sp-lg);border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.map-wrap iframe{display:block;width:100%;height:450px;border:none}
 
 /* SPOTIFY BLOCK */
 .spotify-sec{background:var(--dark-charcoal);padding:5rem var(--sp-lg);text-align:center}
@@ -172,10 +161,8 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 
 /* FOOTER */
 footer{background:var(--dark-charcoal);color:var(--accent-beige);text-align:center;padding:3.5rem var(--sp-lg);border-top:1px solid rgba(255,255,255,0.05)}
-.fn{font-family:var(--font-serif);font-size:var(--fs-section-title);color:var(--bg-white);margin-bottom:6px;letter-spacing:0.02em}
-footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
-.footer-admin-link{display:inline-block;margin-top:18px;font-size:12px;letter-spacing:.08em;color:var(--accent-beige);opacity:.35;text-decoration:underline;transition:var(--t);cursor:pointer;background:none;border:none;font-style:italic}
-.footer-admin-link:hover{opacity:.7}
+.fn{font-family:var(--font-serif);font-size:1.6rem;color:var(--bg-white);margin-bottom:6px;letter-spacing:0.04em}
+footer small{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;opacity:.5}
 
 /* OVERLAYS & MODALS */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:flex-start;justify-content:center;padding:var(--sp-md);overflow-y:auto;backdrop-filter:blur(4px)}
@@ -236,13 +223,7 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 @media(max-width:768px){
-  :root{
-    --fs-hero:56px;
-    --fs-nav:18px;
-    --fs-section-title:24px;
-    --fs-body:16px;
-  }
-  nav{padding:20px var(--sp-md);height:auto}
+  nav{padding:0 var(--sp-md);height:60px}
   .nav-links{display:none}
   .hamburger{display:flex}
   .sec,.gifts-wrap,.rsvp-bg,.cd-sec{padding-left:var(--sp-md);padding-right:var(--sp-md)}
@@ -252,15 +233,11 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
   .cd-grid{gap:1.5rem}
   .ggrid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
   .gimg-wrap,.gimg-wrap img{height:160px}
-  .info-columns{grid-template-columns:1fr;gap:40px}
-  .map-wrap iframe{height:260px}
+  .info-grid{grid-template-columns:1fr}
+  .map-wrap iframe{height:320px}
   .spotify-wrap iframe{height:250px}
   .tab{padding:8px 10px;font-size:10px}
   .csv-row{flex-direction:column}
-  .btn-change-cover{bottom:16px;right:16px;font-size:12px;padding:6px 14px}
-}
-@media(max-width:400px){
-  :root{ --fs-hero:44px; }
 }
 </style>
 </head>
@@ -279,13 +256,15 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 </div>
 
 <nav>
+  <div class="logo" id="nLogo">♡ Gui &amp; Ana</div>
   <div class="nav-links">
-    <button class="nl" onclick="W.go('sInfo')">Evento</button>
+    <button class="nl" onclick="W.go('sInfo')">O Evento</button>
     <button class="nl" onclick="W.go('sRsvp')">Presença</button>
     <button class="nl" onclick="W.go('sGifts')">Presentes</button>
     <button class="nl" onclick="W.go('sSpotify')">Playlist</button>
   </div>
   <div class="nav-right">
+    <button class="btn-adm" id="btnAdm" onclick="W.clickAdmin()">Admin</button>
     <button class="hamburger" id="hamburger" onclick="W.toggleMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -293,23 +272,23 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <button class="nl" onclick="W.go('sInfo');W.toggleMenu()">Evento</button>
+  <button class="nl" onclick="W.go('sInfo');W.toggleMenu()">O Evento</button>
   <button class="nl" onclick="W.go('sRsvp');W.toggleMenu()">Presença</button>
   <button class="nl" onclick="W.go('sGifts');W.toggleMenu()">Presentes</button>
   <button class="nl" onclick="W.go('sSpotify');W.toggleMenu()">Playlist</button>
+  <button class="nl" onclick="W.clickAdmin();W.toggleMenu()" style="border-color:var(--dark-charcoal);font-weight:700">Painel Restrito</button>
 </div>
 
 <section class="hero" id="sTop">
-  <img class="hero-bg-img" id="heroBgImg" src="" alt="" onclick="W.adm&&W.$('fileIn').click()">
-  <div class="hero-overlay"></div>
-  <input type="file" id="fileIn" accept="image/*" style="display:none">
-  <button class="btn-change-cover" id="btnChangeCover" onclick="W.$('fileIn').click()">Alterar Capa</button>
-  <div class="hero-content">
-    <div class="hero-tag" id="hTag">Gui &amp; Ana · Salve a Data</div>
-    <h1 id="hTitle">Gui &amp; Ana</h1>
-    <div class="sep"><div class="sep-line"></div><span style="color:var(--bg-white);opacity:0.6">✦</span><div class="sep-line"></div></div>
-    <p id="hMsg">Estamos muito felizes em celebrar esse momento especial ao lado das pessoas que amamos. Seja muito bem-vindo à nossa lista de presentes.</p>
+  <div class="photo-wrap" id="phWrap" onclick="W.adm&&W.$('fileIn').click()">
+    <span id="phPh">♡</span>
+    <img id="phImg" src="" alt="" style="display:none">
   </div>
+  <input type="file" id="fileIn" accept="image/*" style="display:none">
+  <div class="hero-tag" id="hTag">Gui &amp; Ana · Salve a Data</div>
+  <h1 id="hTitle">Gui &amp; Ana</h1>
+  <div class="sep"><div class="sep-line"></div><span style="color:var(--dark-charcoal);opacity:0.3">✦</span><div class="sep-line"></div></div>
+  <p id="hMsg">Estamos muito felizes em celebrar esse momento especial ao lado das pessoas que amamos. Seja muito bem-vindo à nossa lista de presentes.</p>
   <div class="scroll-hint"><span>Rolar Página</span><div class="scroll-line"></div></div>
 </section>
 
@@ -324,25 +303,15 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 </section>
 
 <section class="sec" id="sInfo">
-  <div class="info-columns">
-    <div class="info-col">
-      <div class="info-col-title">Local da Festa</div>
-      <p class="info-subtitle">Informamos que o horário de início da cerimônia é <span id="iTime">16h30</span>, solicitamos que cheguem com 30 minutos de antecedência.</p>
-      <div id="mapWrap" style="display:none">
-        <div class="map-wrap">
-          <iframe id="mapFrame" src="" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
-      </div>
-      <p class="info-addr" id="iAddr">Rua Flávio Pedrina, 500 Araçoiaba da Serra Jundiaquara, Araçoiaba da Serra - SP, 18190-000</p>
-    </div>
-    <div class="info-col">
-      <div class="info-col-title">Dress Code</div>
-      <p class="info-subtitle" id="iDress">Traje Esporte Fino</p>
-      <p>Queremos todos lindos e arrumados, mas sem formalidades excessivas.</p>
-      <ul>
-        <li>Para as mulheres: Vestidos, macacões ou trajes sociais elegantes.</li>
-        <li>Para os homens: Sejam elegantes à sua maneira! Montem a produção como se sentirem melhor e mais confortáveis. Mas atenção: não usem gravata! Fazemos questão de dispensar esse acessório para que o clima fique bem à vontade.</li>
-      </ul>
+  <div class="sec-head"><div class="sec-tag">Confira os Detalhes</div><div class="sec-title">O Evento</div></div>
+  <div class="info-grid">
+    <div class="info-card"><div style="font-size:1.5rem">📅</div><h2>Data do Encontro</h2><p id="iDate">A confirmar</p><div class="info-detail" id="iTime"></div></div>
+    <div class="info-card"><div style="font-size:1.5rem">📍</div><h2>O Espaço</h2><p id="iVenue">A confirmar</p><div class="info-detail" id="iAddr"></div></div>
+    <div class="info-card"><div style="font-size:1.5rem">👗</div><h2>Dress Code</h2><p id="iDress">A confirmar</p></div>
+  </div>
+  <div id="mapWrap" style="display:none">
+    <div class="map-wrap">
+      <iframe id="mapFrame" src="" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   </div>
 </section>
@@ -421,12 +390,7 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
   <div class="ggrid" id="gGrid"><div class="empty">Sincronizando vitrine...</div></div>
 </section>
 
-<footer>
-  <div class="fn" id="fNames">Gui &amp; Ana</div>
-  <small>Feito com amor por vocês ♡</small>
-  <br>
-  <button class="footer-admin-link" id="footerAdminLink" onclick="W.clickAdmin()">Acesso Restrito</button>
-</footer>
+<footer><div class="fn" id="fNames">Gui &amp; Ana</div><small>Feito com amor por vocês ♡</small></footer>
 
 <div class="ov" id="ovLogin">
   <div class="panel" style="max-width:360px;text-align:center">
@@ -571,8 +535,7 @@ const DEFAULT_CFG = {
   dress:'Esporte Fino',
   msg:'Estamos muito felizes em celebrar esse momento especial ao lado das pessoas que amamos. Seja muito bem-vindo à nossa lista de presentes.',
   user:'noivos', pass:'noivos2025',
-  spotifyUrl:'https://open.spotify.com/embed/playlist/37i9dQZF1DWSlRNWoWejBr?utm_source=generator&si=206455d5c2d84d4f',
-  heroBg:''
+  spotifyUrl:'https://open.spotify.com/embed/playlist/37i9dQZF1DWSlRNWoWejBr?utm_source=generator&si=206455d5c2d84d4f'
 };
 
 var D = { cfg: Object.assign({}, DEFAULT_CFG), gifts: [], rsvps: [] };
@@ -580,9 +543,11 @@ var gState = { cat:'todos', status:'todos', maxPrice:Infinity, sort:'' };
 var _sliderBound = false;
 var prev = {}, gImgB64 = null, gImgBg = '#ffffff';
 
-var SESS = 'wl_sess';
+var SESS = 'wl_sess', PHK = 'wl_ph';
 function getSess(){ try{ return sessionStorage.getItem(SESS)==='1'; }catch(e){ return false; } }
 function setSess(v){ try{ sessionStorage.setItem(SESS,v?'1':''); }catch(e){} }
+function savePh(b){ try{ localStorage.setItem(PHK,b); }catch(e){} }
+function loadPh(){ try{ return localStorage.getItem(PHK); }catch(e){ return null; } }
 
 var W = window.W = {};
 W.$ = function(id){ return document.getElementById(id); };
@@ -607,17 +572,12 @@ W.adm = getSess();
 function refreshAuthUI(){
   W.$('adminBar').classList.toggle('show', W.adm);
   var btn = W.$('btnAdm');
-  if(btn){ if(W.adm){ btn.textContent='Painel'; btn.classList.add('active'); } else{ btn.textContent='Admin'; btn.classList.remove('active'); } }
-  var footerLink = W.$('footerAdminLink');
-  if(footerLink) footerLink.textContent = W.adm ? 'Painel do Casal' : 'Acesso Restrito';
+  if(W.adm){ btn.textContent='Painel'; btn.classList.add('active'); }
+  else{ btn.textContent='Admin'; btn.classList.remove('active'); }
   var rList = W.$('rList');
   if(rList) rList.style.display = W.adm ? 'block' : 'none';
   var csvRow = W.$('rsvpCsvRow');
   if(csvRow) csvRow.style.display = W.adm ? 'flex' : 'none';
-  var chgBtn = W.$('btnChangeCover');
-  if(chgBtn) chgBtn.classList.toggle('show', !!W.adm);
-  var bgImg = W.$('heroBgImg');
-  if(bgImg) bgImg.classList.toggle('editable', !!W.adm);
 }
 
 W.clickAdmin = function(){
@@ -677,7 +637,7 @@ async function dbAddRsvp(r){ if (!sb) return; try { await sb.from('rsvps').inser
 function applyConfig(){
   var c = D.cfg;
   var names = (c.n1||'Nome')+' & '+(c.n2||'Nome');
-  if(W.$('nLogo')) W.$('nLogo').textContent = '♡ '+names;
+  W.$('nLogo').textContent = '♡ '+names;
   W.$('hTitle').textContent = (c.n1||'Nome')+' & '+(c.n2||'Nome');
   W.$('fNames').textContent = names;
   document.title = 'Casamento · '+names;
@@ -686,24 +646,15 @@ function applyConfig(){
     var d=new Date(c.date+'T12:00:00');
     var f=d.toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
     W.$('hTag').textContent='Gui & Ana · '+f;
-    if(W.$('iDate')) W.$('iDate').textContent=f;
+    W.$('iDate').textContent=f;
   }
-  if(W.$('iTime')) W.$('iTime').textContent = c.time||'';
-  if(W.$('iVenue')) W.$('iVenue').textContent = c.venue||'A confirmar';
-  if(W.$('iAddr')) W.$('iAddr').textContent = c.addr||'';
-  if(W.$('iDress')) W.$('iDress').textContent = c.dress||'A confirmar';
+  W.$('iTime').textContent = c.time||'';
+  W.$('iVenue').textContent = c.venue||'A confirmar';
+  W.$('iAddr').textContent = c.addr||'';
+  W.$('iDress').textContent = c.dress||'A confirmar';
   if(c.mapUrl){ W.$('mapFrame').src=c.mapUrl; W.$('mapWrap').style.display='block'; }
   else{ W.$('mapWrap').style.display='none'; }
   if(c.spotifyUrl) W.$('spotifyFrame').src=c.spotifyUrl;
-  // Imagem de fundo do hero — vem do Supabase (D.cfg.heroBg)
-  var bgImg = W.$('heroBgImg');
-  if(bgImg){
-    if(c.heroBg){ bgImg.src = c.heroBg; }
-    else{ bgImg.src = 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop'; }
-  }
-  var chgBtn = W.$('btnChangeCover');
-  if(chgBtn) chgBtn.classList.toggle('show', !!W.adm);
-  if(bgImg) bgImg.classList.toggle('editable', !!W.adm);
 }
 
 function startCD(){
@@ -1090,16 +1041,10 @@ W.$('btnSaveCfg').addEventListener('click', function(){
 W.$('fileIn').addEventListener('change',function(e){
   var f=e.target.files[0]; if(!f)return;
   var r=new FileReader();
-  r.onload=async function(ev){
-    var b64 = ev.target.result;
-    D.cfg.heroBg = b64;
-    var bgImg = W.$('heroBgImg');
-    if(bgImg) bgImg.src = b64;
-    await dbSaveCfg();
-    W.toast('Capa atualizada para todos! ✓');
-  };
+  r.onload=function(ev){ setHeroPh(ev.target.result); savePh(ev.target.result); };
   r.readAsDataURL(f);
 });
+function setHeroPh(src){ var img=W.$('phImg'); img.src=src; img.style.display='block'; W.$('phPh').style.display='none'; }
 
 function init(){
   try {
@@ -1122,6 +1067,7 @@ function init(){
     initPriceSlider();
     renderFilters(); renderGifts(); renderRSVPs(); startCD();
 
+    var ph=loadPh(); if(ph)setHeroPh(ph);
     if(W.adm) W.$('btnAdm').textContent='Painel';
   } catch (err) {
     console.error("Erro inicializacao visual:", err);
