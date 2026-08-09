@@ -49,9 +49,10 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 .btn-adm{display:none}
 .hamburger{display:none;flex-direction:column;gap:5px;padding:6px;border-radius:var(--r-sm)}
 .hamburger span{display:block;width:18px;height:1.5px;background:var(--bg-white);transition:var(--t)}
-.mobile-menu{display:none;position:fixed;inset:0;top:0;background:var(--bg-light);z-index:99;padding:var(--sp-lg);flex-direction:column;gap:8px}
+.mobile-menu{display:none;position:fixed;inset:0;top:0;background:var(--bg-light);z-index:9999;padding:100px var(--sp-lg) var(--sp-lg);flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.mobile-menu-close{position:absolute;top:24px;right:24px;background:none;border:none;font-family:var(--font-serif);font-style:italic;font-size:22px;color:var(--dark-charcoal);cursor:pointer;letter-spacing:0.02em;padding:8px}
 .mobile-menu.open{display:flex}
-.mobile-menu .nl{font-size:20px;padding:14px 20px;border-radius:var(--r-sm);border:1px solid var(--border);color:var(--dark-charcoal);background:var(--bg-white);text-shadow:none}
+.mobile-menu .nl{font-size:20px;padding:14px 20px;border-radius:var(--r-sm);border:1px solid var(--border);color:var(--dark-charcoal);background:var(--bg-white);text-shadow:none;width:100%;max-width:280px;text-align:center}
 
 /* ADMIN BAR */
 .admin-bar{display:none;background:var(--dark-charcoal);color:#fff;text-align:center;padding:8px var(--sp-lg);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
@@ -60,7 +61,7 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 
 /* HERO MINIMALISTA */
 .hero{min-height:100vh;height:100vh;background:var(--dark-charcoal);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:0;position:relative;overflow:hidden}
-.hero-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;filter:grayscale(35%) contrast(1.08) brightness(0.96)}
 .hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,.22);z-index:1}
 .hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:14vh}
 .hero-tag{font-size:var(--fs-body);letter-spacing:.05em;color:var(--bg-white);border:1px solid var(--bg-white);padding:6px 20px;border-radius:var(--r-full);display:inline-block;margin-bottom:24px;text-shadow:0 1px 6px rgba(0,0,0,.25)}
@@ -300,6 +301,7 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="W.toggleMenu()" aria-label="Fechar menu">Fechar ✕</button>
   <button class="nl" onclick="W.go('sInfo');W.toggleMenu()">Evento</button>
   <button class="nl" onclick="W.go('sRsvp');W.toggleMenu()">Presença</button>
   <button class="nl" onclick="W.go('sGifts');W.toggleMenu()">Presentes</button>
@@ -307,7 +309,7 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 </div>
 
 <section class="hero" id="sTop">
-  <img class="hero-bg-img" id="heroBgImg" src="" alt="">
+  <img class="hero-bg-img" id="heroBgImg" src="capa.jpg" alt="">
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="hero-tag" id="hTag" style="display:none">Gui &amp; Ana · Salve a Data</div>
@@ -549,19 +551,6 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
     </div>
 
     <div id="pCfg" style="display:none">
-      <div class="fg">
-        <label>Foto de Capa (Hero)</label>
-        <div class="upload-zone" id="heroUploadZone">
-          <div id="cHeroPreviewWrap" class="prev-img-wrap">
-            <img id="cHeroPreview" src="" alt="">
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <button class="fbtn" id="btnUploadHero" type="button">📷 Escolher Foto de Capa</button>
-            <span style="font-size:12px;color:var(--text-muted)">PNG, JPG ou WEBP</span>
-          </div>
-          <input type="file" id="cHeroBgFile" accept="image/*" style="display:none">
-        </div>
-      </div>
       <div class="fg"><label>Identificação Noivo(a) 1</label><input id="cN1" type="text"></div>
       <div class="fg"><label>Identificação Noivo(a) 2</label><input id="cN2" type="text"></div>
       <div class="fg"><label>Data da Cerimônia</label><input id="cDate" type="date"></div>
@@ -615,8 +604,7 @@ const DEFAULT_CFG = {
   dress:'Esporte Fino',
   msg:'Estamos muito felizes em celebrar esse momento especial ao lado das pessoas que amamos. Seja muito bem-vindo à nossa lista de presentes.',
   user:'noivos', pass:'noivos2025',
-  spotifyUrl:'https://open.spotify.com/embed/playlist/37i9dQZF1DWSlRNWoWejBr?utm_source=generator&si=206455d5c2d84d4f',
-  heroBg:''
+  spotifyUrl:'https://open.spotify.com/embed/playlist/37i9dQZF1DWSlRNWoWejBr?utm_source=generator&si=206455d5c2d84d4f'
 };
 
 var D = { cfg: Object.assign({}, DEFAULT_CFG), gifts: [], rsvps: [] };
@@ -735,12 +723,6 @@ function applyConfig(){
   if(c.mapUrl){ W.$('mapFrame').src=c.mapUrl; W.$('mapWrap').style.display='block'; }
   else{ W.$('mapWrap').style.display='none'; }
   if(c.spotifyUrl) W.$('spotifyFrame').src=c.spotifyUrl;
-  // Imagem de fundo do hero — vem do Supabase (D.cfg.heroBg)
-  var bgImg = W.$('heroBgImg');
-  if(bgImg){
-    if(c.heroBg){ bgImg.src = c.heroBg; }
-    else{ bgImg.src = 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop'; }
-  }
 }
 
 function startCD(){
@@ -970,11 +952,6 @@ function openAdmin(){
   W.$('cTime').value=c.time||''; W.$('cVenue').value=c.venue||''; W.$('cAddr').value=c.addr||'';
   W.$('cMap').value=c.mapUrl||''; W.$('cDress').value=c.dress||''; W.$('cMsg').value=c.msg||'';
   W.$('cSpotify').value=c.spotifyUrl||'';
-  var prev=W.$('cHeroPreview'), prevWrap=W.$('cHeroPreviewWrap');
-  if(prev && prevWrap){
-    if(c.heroBg){ prev.src=c.heroBg; prevWrap.style.display='block'; }
-    else{ prevWrap.style.display='none'; }
-  }
   renderAdminList(); W.aTab('Add');
   W.$('ovAdmin').classList.add('open');
 }
@@ -1141,20 +1118,6 @@ W.$('btnSaveCfg').addEventListener('click', function(){
   dbSaveCfg();
   applyConfig(); startCD();
   W.toast('Configurações atualizadas! ✓');
-});
-
-W.$('btnUploadHero').addEventListener('click', function(){ W.$('cHeroBgFile').click(); });
-W.$('cHeroBgFile').addEventListener('change', function(e){
-  var f=e.target.files[0]; if(!f)return;
-  var r=new FileReader();
-  r.onload=function(ev){
-    D.cfg.heroBg = ev.target.result;
-    var prev=W.$('cHeroPreview'), prevWrap=W.$('cHeroPreviewWrap');
-    if(prev){ prev.src = ev.target.result; }
-    if(prevWrap){ prevWrap.style.display='block'; }
-    W.toast('Foto de capa pronta — clique em Atualizar Configurações para salvar. 📷');
-  };
-  r.readAsDataURL(f);
 });
 
 function init(){
