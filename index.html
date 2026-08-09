@@ -23,15 +23,15 @@
   --shadow-md:0 12px 32px rgba(0,0,0,.06);
   --t:all .22s cubic-bezier(0.25, 1, 0.5, 1);
   /* Tamanhos rígidos — Regra de Ouro tipográfica */
-  --fs-hero:180px;
-  --fs-nav:32px;
-  --fs-section-title:32px;
-  --fs-body:22px;
+  --fs-hero:140px;
+  --fs-nav:16px;
+  --fs-section-title:30px;
+  --fs-body:17px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 *{font-family:'Libre Bodoni',serif !important;font-style:italic !important}
-body{font-family:var(--font-sans);background:var(--bg-light);color:var(--dark-charcoal);font-size:var(--fs-body);line-height:1.65;letter-spacing:0.02em;font-style:italic}
+body{font-family:var(--font-sans);background:var(--bg-light);color:var(--dark-charcoal);font-size:var(--fs-body);line-height:1.75;letter-spacing:0.02em;font-style:italic}
 img{max-width:100%;display:block}
 button{cursor:pointer;font-family:var(--font-sans);border:none;outline:none;background:none}
 input,select,textarea{font-family:var(--font-sans);font-size:var(--fs-body);width:100%;border:1px solid var(--accent-beige);border-radius:var(--r-sm);padding:11px 14px;background:var(--bg-white);color:var(--dark-charcoal);box-sizing:border-box;transition:var(--t);letter-spacing:0.04em;font-style:italic}
@@ -59,11 +59,11 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 .admin-bar button{color:#fff;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:underline;background:none;border:none;cursor:pointer}
 
 /* HERO MINIMALISTA */
-.hero{min-height:100vh;height:100vh;background:var(--dark-charcoal);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0;position:relative;overflow:hidden}
+.hero{min-height:100vh;height:100vh;background:var(--dark-charcoal);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:0;position:relative;overflow:hidden}
 .hero-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;cursor:default}
 .hero-bg-img.editable{cursor:pointer}
-.hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,.28);z-index:1}
-.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,.22);z-index:1}
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:14vh}
 .hero-tag{font-size:var(--fs-body);letter-spacing:.05em;color:var(--bg-white);border:1px solid var(--bg-white);padding:6px 20px;border-radius:var(--r-full);display:inline-block;margin-bottom:24px;text-shadow:0 1px 6px rgba(0,0,0,.25)}
 .hero h1{font-family:var(--font-serif);font-size:var(--fs-hero);font-weight:400;color:var(--bg-white);line-height:1;margin-bottom:12px;letter-spacing:0.01em;text-shadow:0 2px 20px rgba(0,0,0,.3)}
 .hero p{font-size:var(--fs-body);color:var(--bg-white);max-width:700px;line-height:1.8;margin:0 auto 2.5rem;letter-spacing:0.02em;text-shadow:0 1px 8px rgba(0,0,0,.25)}
@@ -85,22 +85,32 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 .cd-unit{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-beige);margin-top:8px}
 
 /* SECTIONS BRANCAS CLASSICAS */
-.sec{padding:var(--sp-2xl) var(--sp-lg);max-width:960px;margin:0 auto}
+.sec{padding:var(--sp-2xl) 48px;max-width:1200px;margin:0 auto}
 .sec-head{text-align:center;margin-bottom:3.5rem}
 .sec-tag{font-size:var(--fs-body);letter-spacing:.05em;color:var(--text-muted)}
 .sec-title{font-family:var(--font-serif);font-size:var(--fs-section-title);font-weight:400;color:var(--dark-charcoal);margin-top:8px;letter-spacing:0.01em}
 
 /* INFO CARDS */
 /* INFO — layout editorial de 2 colunas */
-.info-columns{display:grid;grid-template-columns:1fr 1fr;gap:64px;text-align:left}
+#sInfo{position:relative;overflow:hidden}
+.sec-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;max-width:150%;height:auto;color:var(--dark-charcoal);opacity:.05;pointer-events:none;z-index:0}
+.info-columns{display:grid;grid-template-columns:1fr 1fr;gap:96px;text-align:left;position:relative;z-index:1}
+.info-icon{width:34px;height:34px;margin-bottom:14px;color:var(--dark-charcoal);opacity:.75}
+.info-icon svg{width:100%;height:100%;display:block}
 .info-col-title{font-family:var(--font-serif);font-size:var(--fs-section-title);color:var(--dark-charcoal);margin-bottom:20px;letter-spacing:0.01em}
-.info-col p, .info-col li{font-size:var(--fs-body);color:var(--dark-charcoal);line-height:1.7;letter-spacing:0.01em;margin-bottom:16px}
+.dress-rule{padding-left:2px}
+.dress-rule-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dress-mark{font-size:13px;color:var(--dark-charcoal);opacity:.55}
+.dress-rule-title{font-family:var(--font-serif);font-size:19px;color:var(--dark-charcoal);letter-spacing:0.02em}
+.dress-rule-text{font-size:var(--fs-body);color:var(--dark-charcoal);line-height:1.75;letter-spacing:0.01em;padding-left:23px;margin:0}
+.info-divider{display:flex;align-items:center;gap:0;margin:18px 0}
+.info-divider::before,.info-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.info-divider .diamond{width:6px;height:6px;background:var(--dark-charcoal);opacity:.4;transform:rotate(45deg);flex-shrink:0;margin:0 12px}
+.info-col p{font-size:var(--fs-body);color:var(--dark-charcoal);line-height:1.8;letter-spacing:0.01em;margin-bottom:16px}
 .info-col .info-subtitle{font-weight:600;margin-bottom:16px}
-.info-col ul{list-style:none;padding:0;margin:0}
-.info-col ul li{margin-bottom:14px;padding-left:0}
 .map-wrap{margin:24px 0;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
 .map-wrap iframe{display:block;width:100%;height:340px;border:none}
-.info-addr{font-size:var(--fs-body);color:var(--dark-charcoal);line-height:1.7}
+.info-addr{font-size:var(--fs-body);color:var(--dark-charcoal);line-height:1.8}
 
 /* SPOTIFY BLOCK */
 .spotify-sec{background:var(--dark-charcoal);padding:5rem var(--sp-lg);text-align:center}
@@ -123,7 +133,7 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 .btn-csv{flex:1;min-width:160px;padding:12px;background:var(--dark-charcoal);color:#fff;border:none;border-radius:var(--r-sm);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:var(--t);display:flex;align-items:center;justify-content:center;gap:6px}
 
 /* GIFTS & FILTER PANEL */
-.gifts-wrap{padding:var(--sp-2xl) var(--sp-lg);max-width:1100px;margin:0 auto}
+.gifts-wrap{padding:var(--sp-2xl) 48px;max-width:1200px;margin:0 auto}
 .filter-panel{background:var(--bg-white);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--sp-md) var(--sp-lg);margin-bottom:var(--sp-lg);box-shadow:var(--shadow-sm)}
 .filter-row{display:flex;align-items:flex-start;gap:var(--sp-md);flex-wrap:wrap;margin-bottom:var(--sp-md)}
 .filter-row:last-child{margin-bottom:0}
@@ -237,10 +247,10 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 
 @media(max-width:768px){
   :root{
-    --fs-hero:56px;
-    --fs-nav:18px;
+    --fs-hero:52px;
+    --fs-nav:15px;
     --fs-section-title:24px;
-    --fs-body:16px;
+    --fs-body:15px;
   }
   nav{padding:20px var(--sp-md);height:auto}
   .nav-links{display:none}
@@ -253,6 +263,8 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
   .ggrid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
   .gimg-wrap,.gimg-wrap img{height:160px}
   .info-columns{grid-template-columns:1fr;gap:40px}
+  .sec-watermark{width:520px;opacity:.04}
+  .info-icon{width:28px;height:28px}
   .map-wrap iframe{height:260px}
   .spotify-wrap iframe{height:250px}
   .tab{padding:8px 10px;font-size:10px}
@@ -260,7 +272,7 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
   .btn-change-cover{bottom:16px;right:16px;font-size:12px;padding:6px 14px}
 }
 @media(max-width:400px){
-  :root{ --fs-hero:44px; }
+  :root{ --fs-hero:40px; }
 }
 </style>
 </head>
@@ -305,10 +317,10 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
   <input type="file" id="fileIn" accept="image/*" style="display:none">
   <button class="btn-change-cover" id="btnChangeCover" onclick="W.$('fileIn').click()">Alterar Capa</button>
   <div class="hero-content">
-    <div class="hero-tag" id="hTag">Gui &amp; Ana · Salve a Data</div>
+    <div class="hero-tag" id="hTag" style="display:none">Gui &amp; Ana · Salve a Data</div>
     <h1 id="hTitle">Gui &amp; Ana</h1>
-    <div class="sep"><div class="sep-line"></div><span style="color:var(--bg-white);opacity:0.6">✦</span><div class="sep-line"></div></div>
-    <p id="hMsg">Estamos muito felizes em celebrar esse momento especial ao lado das pessoas que amamos. Seja muito bem-vindo à nossa lista de presentes.</p>
+    <div class="sep" style="display:none"><div class="sep-line"></div><span style="color:var(--bg-white);opacity:0.6">✦</span><div class="sep-line"></div></div>
+    <p id="hMsg" style="display:none">Estamos muito felizes em celebrar esse momento especial ao lado das pessoas que amamos. Seja muito bem-vindo à nossa lista de presentes.</p>
   </div>
   <div class="scroll-hint"><span>Rolar Página</span><div class="scroll-line"></div></div>
 </section>
@@ -324,8 +336,27 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 </section>
 
 <section class="sec" id="sInfo">
+  <svg class="sec-watermark" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g id="laurelBranch" fill="none" stroke="currentColor" stroke-width="1">
+      <path d="M200 190 C150 185 110 165 90 130 C75 105 70 75 80 40"/>
+      <ellipse cx="188" cy="186" rx="10" ry="4" transform="rotate(20 188 186)"/>
+      <ellipse cx="170" cy="180" rx="10" ry="4" transform="rotate(35 170 180)"/>
+      <ellipse cx="152" cy="170" rx="9" ry="4" transform="rotate(50 152 170)"/>
+      <ellipse cx="136" cy="156" rx="9" ry="4" transform="rotate(65 136 156)"/>
+      <ellipse cx="122" cy="140" rx="8" ry="3.5" transform="rotate(80 122 140)"/>
+      <ellipse cx="110" cy="122" rx="8" ry="3.5" transform="rotate(95 110 122)"/>
+      <ellipse cx="100" cy="102" rx="7" ry="3" transform="rotate(110 100 102)"/>
+      <ellipse cx="92" cy="82" rx="7" ry="3" transform="rotate(125 92 82)"/>
+      <ellipse cx="85" cy="60" rx="6" ry="2.5" transform="rotate(140 85 60)"/>
+      <ellipse cx="81" cy="40" rx="6" ry="2.5" transform="rotate(155 81 40)"/>
+    </g>
+    <use href="#laurelBranch" transform="translate(400,0) scale(-1,1)"/>
+  </svg>
   <div class="info-columns">
     <div class="info-col">
+      <div class="info-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.58 7-12A7 7 0 0 0 5 9c0 4.42 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
+      </div>
       <div class="info-col-title">Local da Festa</div>
       <p class="info-subtitle">Informamos que o horário de início da cerimônia é <span id="iTime">16h30</span>, solicitamos que cheguem com 30 minutos de antecedência.</p>
       <div id="mapWrap" style="display:none">
@@ -336,13 +367,20 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
       <p class="info-addr" id="iAddr">Rua Flávio Pedrina, 500 Araçoiaba da Serra Jundiaquara, Araçoiaba da Serra - SP, 18190-000</p>
     </div>
     <div class="info-col">
+      <div class="info-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5a1.5 1.5 0 1 1 1.5 1.5"/><path d="M12 5 3 11.5c-.6.45-.3 1.4.4 1.4h17.2c.7 0 1-.95.4-1.4L12 5Z"/><path d="M4 15.5h16"/></svg>
+      </div>
       <div class="info-col-title">Dress Code</div>
       <p class="info-subtitle" id="iDress">Traje Esporte Fino</p>
-      <p>Queremos todos lindos e arrumados, mas sem formalidades excessivas.</p>
-      <ul>
-        <li>Para as mulheres: Vestidos, macacões ou trajes sociais elegantes.</li>
-        <li>Para os homens: Sejam elegantes à sua maneira! Montem a produção como se sentirem melhor e mais confortáveis. Mas atenção: não usem gravata! Fazemos questão de dispensar esse acessório para que o clima fique bem à vontade.</li>
-      </ul>
+      <div class="dress-rule">
+        <div class="dress-rule-head"><span class="dress-mark">✦</span><span class="dress-rule-title">Para as mulheres</span></div>
+        <p class="dress-rule-text">Vestidos, macacões ou trajes sociais elegantes.</p>
+      </div>
+      <div class="info-divider"><span class="diamond"></span></div>
+      <div class="dress-rule">
+        <div class="dress-rule-head"><span class="dress-mark">✦</span><span class="dress-rule-title">Para os homens</span></div>
+        <p class="dress-rule-text">Sejam elegantes à sua maneira! Montem a produção como se sentirem melhor e mais confortáveis. Mas atenção: não usem gravata! Fazemos questão de dispensar esse acessório para que o clima fique bem à vontade.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -423,7 +461,7 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 
 <footer>
   <div class="fn" id="fNames">Gui &amp; Ana</div>
-  <small>Feito com amor por vocês ♡</small>
+  <small>Feito com amor ♡</small>
   <br>
   <button class="footer-admin-link" id="footerAdminLink" onclick="W.clickAdmin()">Acesso Restrito</button>
 </footer>
