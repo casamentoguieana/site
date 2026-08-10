@@ -200,6 +200,11 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 .ai{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px;gap:8px}
 .bdel{background:none;border:1px solid var(--dark-charcoal);color:var(--dark-charcoal);padding:4px 12px;border-radius:var(--r-sm);font-size:11px;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;transition:var(--t)}
 .bdel:hover{background:var(--dark-charcoal);color:#fff}
+.bedit{background:var(--dark-charcoal);border:1px solid var(--dark-charcoal);color:#fff;padding:4px 12px;border-radius:var(--r-sm);font-size:11px;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;transition:var(--t)}
+.bedit:hover{background:#333333}
+.ai-actions{display:flex;gap:6px;flex-shrink:0}
+.edit-notice{display:none;align-items:center;justify-content:space-between;gap:12px;background:var(--accent-beige);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--dark-charcoal)}
+.edit-notice button{background:none;border:none;text-decoration:underline;cursor:pointer;font-size:12px;color:var(--dark-charcoal);flex-shrink:0}
 .cond{display:none}
 .cond.v{display:block}
 
@@ -368,13 +373,13 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
       <div class="info-col-title">Dress Code</div>
       <p class="info-subtitle" id="iDress">Traje Esporte Fino</p>
       <div class="dress-rule">
-        <div class="dress-rule-head"><span class="dress-mark">✦</span><span class="dress-rule-title">Para as mulheres</span></div>
-        <p class="dress-rule-text">Vestidos, macacões ou trajes sociais elegantes.</p>
+        <div class="dress-rule-head"><span class="dress-mark">✦</span><span class="dress-rule-title">Mulheres</span></div>
+        <p class="dress-rule-text">Traje esporte fino: Vestidos, macacões ou trajes sociais elegantes.</p>
       </div>
       <div class="info-divider"><span class="diamond"></span></div>
       <div class="dress-rule">
-        <div class="dress-rule-head"><span class="dress-mark">✦</span><span class="dress-rule-title">Para os homens</span></div>
-        <p class="dress-rule-text">Sejam elegantes à sua maneira! Montem a produção como se sentirem melhor e mais confortáveis. Mas atenção: não usem gravata! Fazemos questão de dispensar esse acessório para que o clima fique bem à vontade.</p>
+        <div class="dress-rule-head"><span class="dress-mark">✦</span><span class="dress-rule-title">Homens</span></div>
+        <p class="dress-rule-text">Traje esporte fino: Camisa ou camiseta formal, calça de sarja ou alfaiataria, e sapato ou tênis social. O uso de gravata está dispensado.</p>
       </div>
     </div>
   </div>
@@ -484,6 +489,10 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
     </div>
 
     <div id="pAdd">
+      <div class="edit-notice" id="editNotice">
+        <span id="editNoticeText">Editando presente</span>
+        <button type="button" onclick="W.cancelEditGift()">Cancelar edição</button>
+      </div>
       <div class="fg"><label>Formato de Recebimento</label>
         <div class="radrow">
           <label class="ro"><input type="radio" name="gt" value="manual" checked onchange="W.togType()"> Simbólico (Pix)</label>
@@ -610,7 +619,7 @@ const DEFAULT_CFG = {
 var D = { cfg: Object.assign({}, DEFAULT_CFG), gifts: [], rsvps: [] };
 var gState = { cat:'todos', status:'todos', maxPrice:Infinity, sort:'' };
 var _sliderBound = false;
-var prev = {}, gImgB64 = null, gImgBg = '#ffffff';
+var prev = {}, gImgB64 = null, gImgBg = '#ffffff', editingGiftId = null;
 
 var SESS = 'wl_sess';
 function getSess(){ try{ return sessionStorage.getItem(SESS)==='1'; }catch(e){ return false; } }
@@ -1052,42 +1061,106 @@ W.$('gImgClear').addEventListener('click',function(e){
   W.$('dropArea').style.display='block'; W.$('gImgFile').value='';
 });
 
+function resetGiftForm(){
+  ['gTit','gCat','gDesc','gImg','gVal','l1','u1','l2','u2','gQtot'].forEach(function(id){ var el=W.$(id); if(el)el.value=''; });
+  ['pvM','pv1','pv2'].forEach(function(id){ var el=W.$(id); if(el)el.classList.remove('v'); });
+  gImgB64=null; gImgBg='#ffffff';
+  W.$('gImgPreviewWrap').style.display='none'; W.$('gImgPreview').src=''; W.$('gImgFile').value='';
+  if(W.$('dropArea'))W.$('dropArea').style.display='block';
+  var radios=document.querySelectorAll('input[name="gt"]'); if(radios.length)radios[0].checked=true;
+  W.togType(); prev={};
+}
+
+W.cancelEditGift = function(){
+  editingGiftId = null;
+  resetGiftForm();
+  W.$('btnAddGift').textContent = 'Salvar na Vitrine';
+  W.$('editNotice').style.display = 'none';
+};
+
+W.startEditGift = function(id){
+  var g = D.gifts.find(function(x){ return x && x.id===id; });
+  if(!g) return;
+  editingGiftId = id;
+  W.aTab('Add');
+
+  var radios = document.querySelectorAll('input[name="gt"]');
+  radios.forEach(function(r){ r.checked = (r.value === g.type); });
+  W.togType();
+
+  W.$('gTit').value = g.title || '';
+  W.$('gCat').value = g.cat || '';
+  W.$('gDesc').value = g.desc || '';
+  W.$('gVal').value = g.price || '';
+
+  gImgB64 = null; gImgBg = g.imgBg || '#ffffff';
+  if(g.img && g.img.indexOf('data:') === 0){
+    gImgB64 = g.img;
+    W.$('gImgPreview').src = g.img;
+    W.$('gImgPreviewWrap').style.display = 'block';
+    if(W.$('dropArea')) W.$('dropArea').style.display = 'none';
+    W.$('gImg').value = '';
+  } else {
+    W.$('gImg').value = g.img || '';
+    W.$('gImgPreviewWrap').style.display = 'none';
+    if(W.$('dropArea')) W.$('dropArea').style.display = 'block';
+  }
+
+  if(g.type === 'url'){
+    W.$('l1').value = g.lbl1 || ''; W.$('u1').value = g.url1 || '';
+    W.$('l2').value = g.lbl2 || ''; W.$('u2').value = g.url2 || '';
+  }
+  if(g.type === 'quota'){
+    W.$('gQtot').value = g.qtot || '';
+  }
+
+  W.$('btnAddGift').textContent = 'Atualizar Presente';
+  W.$('editNoticeText').textContent = 'Editando: ' + g.title;
+  W.$('editNotice').style.display = 'flex';
+};
+
 W.$('btnAddGift').addEventListener('click', function(){
   var type=document.querySelector('input[name="gt"]:checked').value;
   var title=W.$('gTit').value.trim();
   if(!title){ W.toast('Informe o título.'); return; }
   var imgSrc=gImgB64||W.$('gImg').value.trim();
-  var g={
-    id: Date.now().toString(36)+Math.random().toString(36).slice(2,5),
-    type:type, title:title,
-    cat:W.$('gCat').value.trim(), desc:W.$('gDesc').value.trim(),
-    img:imgSrc, imgBg:gImgBg,
-    price:W.$('gVal').value
-  };
+
+  var isEditing = !!editingGiftId;
+  var g = isEditing ? D.gifts.find(function(x){ return x && x.id===editingGiftId; }) : null;
+  if(isEditing && !g) isEditing = false;
+  if(!g){ g = { id: Date.now().toString(36)+Math.random().toString(36).slice(2,5) }; }
+
+  g.type=type; g.title=title;
+  g.cat=W.$('gCat').value.trim(); g.desc=W.$('gDesc').value.trim();
+  g.img=imgSrc; g.imgBg=gImgBg;
+  g.price=W.$('gVal').value;
   if(type==='url'){
     g.lbl1=W.$('l1').value.trim(); g.url1=W.$('u1').value.trim();
     g.lbl2=W.$('l2').value.trim(); g.url2=W.$('u2').value.trim();
   }
-  if(type==='quota'){ g.qtot=parseInt(W.$('gQtot').value)||1; g.taken=0; }
+  if(type==='quota'){
+    g.qtot=parseInt(W.$('gQtot').value)||1;
+    if(g.taken===undefined) g.taken=0;
+  }
 
   var addBtn=W.$('btnAddGift'), origTxt=addBtn.textContent;
-  addBtn.disabled=true; addBtn.textContent='✓ Processando…'; addBtn.style.background='#444444';
+  addBtn.disabled=true; addBtn.textContent = isEditing ? '✓ Atualizando…' : '✓ Processando…'; addBtn.style.background='#444444';
 
-  D.gifts.push(g);
-  dbAddGift(g);
+  if(isEditing){
+    dbUpdateGift(g);
+  } else {
+    D.gifts.push(g);
+    dbAddGift(g);
+  }
   renderGifts(); renderFilters(); renderAdminList();
 
   setTimeout(function(){
-    ['gTit','gCat','gDesc','gImg','gVal','l1','u1','l2','u2','gQtot'].forEach(function(id){ var el=W.$(id); if(el)el.value=''; });
-    ['pvM','pv1','pv2'].forEach(function(id){ var el=W.$(id); if(el)el.classList.remove('v'); });
-    gImgB64=null; gImgBg='#ffffff';
-    W.$('gImgPreviewWrap').style.display='none'; W.$('gImgPreview').src=''; W.$('gImgFile').value='';
-    if(W.$('dropArea'))W.$('dropArea').style.display='block';
-    var radios=document.querySelectorAll('input[name="gt"]'); if(radios.length)radios[0].checked=true;
-    W.togType(); prev={};
+    resetGiftForm();
+    editingGiftId = null;
     initPriceSlider();
-    addBtn.disabled=false; addBtn.textContent=origTxt; addBtn.style.background='';
-    W.toast('Item salvo com sucesso! 🎁',4000);
+    addBtn.disabled=false; addBtn.textContent='Salvar na Vitrine'; addBtn.style.background='';
+    W.$('editNotice').style.display = 'none';
+    W.toast(isEditing ? 'Presente atualizado com sucesso! ✓' : 'Item salvo com sucesso! 🎁', 4000);
   },600);
 });
 
@@ -1096,13 +1169,21 @@ function renderAdminList(){
   if(!D.gifts.length){ el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Nenhum registro cadastrado.</p>'; return; }
   el.innerHTML=D.gifts.map(function(g){
     if(!g) return '';
-    return '<div class="ai"><span>'+esc(g.title)+' <small style="color:var(--text-muted)">('+g.type+(g.cat?' · '+g.cat:'')+')</small></span>' +'<button class="bdel" data-did="'+g.id+'">Remover</button></div>';
+    return '<div class="ai"><span>'+esc(g.title)+' <small style="color:var(--text-muted)">('+g.type+(g.cat?' · '+g.cat:'')+')</small></span>'
+      +'<span class="ai-actions">'
+      +'<button class="bedit" data-eid="'+g.id+'">Editar</button>'
+      +'<button class="bdel" data-did="'+g.id+'">Excluir</button>'
+      +'</span></div>';
   }).join('');
+  el.querySelectorAll('.bedit').forEach(function(b){
+    b.addEventListener('click', function(){ W.startEditGift(b.dataset.eid); });
+  });
   el.querySelectorAll('.bdel').forEach(function(b){
     b.addEventListener('click', function(){
-      if(!confirm('Remover este item?'))return;
+      if(!confirm('Tem certeza que deseja excluir este presente?'))return;
       D.gifts=D.gifts.filter(function(g){ return g && g.id!==b.dataset.did; });
       dbDeleteGift(b.dataset.did);
+      if(editingGiftId === b.dataset.did){ W.cancelEditGift(); }
       renderGifts(); renderFilters(); renderAdminList(); initPriceSlider();
     });
   });
