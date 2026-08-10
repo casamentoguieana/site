@@ -471,8 +471,8 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
     <button class="x" onclick="W.$('ovLogin').classList.remove('open')">×</button>
     <h2>Acesso Autenticado</h2>
     <p style="font-size:12px;color:var(--text-muted);margin-bottom:20px">Configurações internas do casal</p>
-    <div class="fg" style="text-align:left"><label>Login</label><input id="lU" type="text" placeholder="noivos"></div>
-    <div class="fg" style="text-align:left"><label>Chave de Acesso</label><input id="lP" type="password" placeholder="••••••••"></div>
+    <div class="fg" style="text-align:left"><label>E-mail</label><input id="lU" type="email" placeholder="seu@email.com"></div>
+    <div class="fg" style="text-align:left"><label>Senha</label><input id="lP" type="password" placeholder="••••••••"></div>
     <button class="btn-main" onclick="W.doLogin()">Acessar Painel</button>
     <div id="lErr" style="color:var(--dark-charcoal);font-weight:700;font-size:12px;margin-top:10px;display:none">Credenciais inválidas.</div>
   </div>
@@ -570,7 +570,6 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
       <div class="fg"><label>Código de Vestimenta</label><input id="cDress" type="text"></div>
       <div class="fg"><label>Mensagem aos Convidados</label><textarea id="cMsg" rows="3"></textarea></div>
       <div class="fg"><label>Código de Incorporação Spotify (src)</label><input id="cSpotify" type="text"></div>
-      <div class="fg"><label>Atualizar Senha Admin (em branco para manter)</label><input id="cPass" type="password" placeholder="••••••••"></div>
       <button class="btn-main" id="btnSaveCfg">Atualizar Configurações</button>
     </div>
   </div>
@@ -612,7 +611,6 @@ const DEFAULT_CFG = {
   mapUrl:'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3309.1586599831244!2d-47.587747199999995!3d-23.5778029!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94c58d78296c30c1%3A0xfba07887b7bad422!2sEspa%C3%A7o%20Aura%20Eventos!5e1!3m2!1spt-BR!2sbr!4v1783558241732!5m2!1spt-BR!2sbr',
   dress:'Esporte Fino',
   msg:'Estamos muito felizes em celebrar esse momento especial ao lado das pessoas que amamos. Seja muito bem-vindo à nossa lista de presentes.',
-  user:'noivos', pass:'noivos2025',
   spotifyUrl:'https://open.spotify.com/embed/playlist/37i9dQZF1DWSlRNWoWejBr?utm_source=generator&si=206455d5c2d84d4f'
 };
 
@@ -620,10 +618,6 @@ var D = { cfg: Object.assign({}, DEFAULT_CFG), gifts: [], rsvps: [] };
 var gState = { cat:'todos', status:'todos', maxPrice:Infinity, sort:'' };
 var _sliderBound = false;
 var prev = {}, gImgB64 = null, gImgBg = '#ffffff', editingGiftId = null;
-
-var SESS = 'wl_sess';
-function getSess(){ try{ return sessionStorage.getItem(SESS)==='1'; }catch(e){ return false; } }
-function setSess(v){ try{ sessionStorage.setItem(SESS,v?'1':''); }catch(e){} }
 
 var W = window.W = {};
 W.$ = function(id){ return document.getElementById(id); };
@@ -643,7 +637,7 @@ W.toast = function(m,dur){
 W.go = function(id){ var el=W.$(id); if(el)el.scrollIntoView({behavior:'smooth'}); };
 W.toggleMenu = function(){ W.$('mobileMenu').classList.toggle('open'); };
 
-W.adm = getSess();
+W.adm = false;
 
 function refreshAuthUI(){
   W.$('adminBar').classList.toggle('show', W.adm);
@@ -657,25 +651,47 @@ function refreshAuthUI(){
   if(csvRow) csvRow.style.display = W.adm ? 'flex' : 'none';
 }
 
+// Monitoramento de sessão via Supabase Auth — mantém o admin logado
+// com segurança entre recarregamentos de página através do token JWT.
+if(sb){
+  sb.auth.onAuthStateChange(function(event, session){
+    W.adm = !!session;
+    refreshAuthUI();
+  });
+}
+
 W.clickAdmin = function(){
   if(W.adm){ openAdmin(); }
   else{ W.$('ovLogin').classList.add('open'); setTimeout(function(){ W.$('lU').focus(); },80); }
 };
 
-W.doLogin = function(){
-  var u=W.$('lU').value.trim(), p=W.$('lP').value;
-  if(u===(D.cfg.user||'noivos') && p===(D.cfg.pass||'noivos2025')){
-    W.adm=true; setSess(true);
+W.doLogin = async function(){
+  var email=W.$('lU').value.trim(), pass=W.$('lP').value;
+  W.$('lErr').style.display='none';
+  if(!email || !pass){ W.$('lErr').textContent='Preencha e-mail e senha.'; W.$('lErr').style.display='block'; return; }
+  if(!sb){ W.$('lErr').textContent='Conexão indisponível.'; W.$('lErr').style.display='block'; return; }
+  try{
+    var res = await sb.auth.signInWithPassword({ email: email, password: pass });
+    if(res.error || !res.data || !res.data.session){
+      W.$('lErr').textContent='Credenciais inválidas.';
+      W.$('lErr').style.display='block';
+      return;
+    }
+    W.adm = true;
+    refreshAuthUI();
     W.$('ovLogin').classList.remove('open');
-    W.$('lErr').style.display='none';
     W.$('lU').value=''; W.$('lP').value='';
-    refreshAuthUI(); openAdmin();
     W.toast('Sessão iniciada com sucesso. ✓');
-  } else { W.$('lErr').style.display='block'; }
+    openAdmin();
+  } catch(e){
+    W.$('lErr').textContent='Credenciais inválidas.';
+    W.$('lErr').style.display='block';
+  }
 };
 
-W.logout = function(){
-  W.adm=false; setSess(false);
+W.logout = async function(){
+  if(sb){ try{ await sb.auth.signOut(); }catch(e){} }
+  W.adm=false;
   W.$('ovAdmin').classList.remove('open');
   refreshAuthUI();
   W.toast('Sessão encerrada.');
@@ -1195,7 +1211,6 @@ W.$('btnSaveCfg').addEventListener('click', function(){
   c.time=W.$('cTime').value.trim(); c.venue=W.$('cVenue').value.trim(); c.addr=W.$('cAddr').value.trim();
   c.mapUrl=W.$('cMap').value.trim(); c.dress=W.$('cDress').value.trim(); c.msg=W.$('cMsg').value.trim();
   c.spotifyUrl=W.$('cSpotify').value.trim()||c.spotifyUrl;
-  var np=W.$('cPass').value; if(np)c.pass=np;
   dbSaveCfg();
   applyConfig(); startCD();
   W.toast('Configurações atualizadas! ✓');
