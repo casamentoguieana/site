@@ -862,10 +862,13 @@ W.$('btnRsvp').addEventListener('click', function(){
   renderRSVPs();
   W.toast(att==='s'?'Presença confirmada! 🎉':'Resposta registrada!');
   if(att === 's'){
-    var waMsgRsvp = "Oi Gui e Ana! Acabei de confirmar minha presença no casamento. Estou muito feliz em celebrar esse dia com vocês!";
-    var waUrlRsvp = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsgRsvp);
-    window.open(waUrlRsvp, '_blank');
-  }
+        var waMsgRsvp = "Oi Gui e Ana! Acabei de confirmar minha presença no casamento. Estou muito feliz em celebrar esse dia com vocês!";
+        if (num > 0) {
+          waMsgRsvp += "\n\nConfirmei a presença de mais " + num + (num > 1 ? " pessoas." : " pessoa.");
+        }
+        var waUrlRsvp = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsgRsvp);
+        window.open(waUrlRsvp, '_blank');
+      } 
 });
 
 function renderRSVPs(){
