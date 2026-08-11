@@ -55,7 +55,7 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 .mobile-menu .nl{font-size:20px;padding:14px 20px;border-radius:var(--r-sm);border:1px solid var(--border);color:var(--dark-charcoal);background:var(--bg-white);text-shadow:none;width:100%;max-width:280px;text-align:center}
 
 /* ADMIN BAR */
-.admin-bar{display:none;background:var(--dark-charcoal);color:#fff;text-align:center;padding:8px var(--sp-lg);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.admin-bar{display:none;background:var(--dark-charcoal);color:#fff;text-align:center;padding:8px var(--sp-lg);font-size:11px;letter-spacing:.1em;text-transform:uppercase;position:relative;z-index:9999}
 .admin-bar.show{display:flex;align-items:center;justify-content:center;gap:var(--sp-md)}
 .admin-bar button{color:#fff;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:underline;background:none;border:none;cursor:pointer}
 
@@ -462,6 +462,7 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
     <div class="filter-row">
       <span class="filter-label">Filtro de Categoria</span>
       <div class="fbar" id="fBar"><button class="filt on" id="filtAll">Todas as Opções</button></div>
+      <button id="btnQuickAdd" onclick="W.quickAddGift()" style="display:none; margin-left:auto; padding:8px 16px; background:var(--dark-charcoal); color:var(--bg-white); border:none; border-radius:var(--r-full); font-size:11px; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; font-weight:700; transition:var(--t); font-family:var(--font-sans);">+ Adicionar</button>
     </div>
     <div class="filter-row filter-row-controls">
       <div class="filter-group">
@@ -683,6 +684,7 @@ function refreshAuthUI(){
   if(rList) rList.style.display = W.adm ? 'block' : 'none';
   var csvRow = W.$('rsvpCsvRow');
   if(csvRow) csvRow.style.display = W.adm ? 'flex' : 'none';
+  var btnQa = W.$('btnQuickAdd'); if(btnQa) btnQa.style.display = W.adm ? 'block' : 'none';
   if(typeof renderGifts === 'function') renderGifts();
 }
 
@@ -726,10 +728,9 @@ W.doLogin = async function(){
 
 W.logout = async function(){
   if(sb){ try{ await sb.auth.signOut(); }catch(e){} }
-  W.adm=false;
+  W.adm = false;
   W.$('ovAdmin').classList.remove('open');
-  refreshAuthUI();
-  W.toast('Sessão encerrada.');
+  window.location.reload();
 };
 W.$('lP').addEventListener('keydown', function(e){ if(e.key==='Enter') W.doLogin(); });
 
@@ -1189,6 +1190,8 @@ W.deleteGiftCard = function(id){
   if(editingGiftId === id){ W.cancelEditGift(); }
   renderGifts(); renderFilters(); renderAdminList(); initPriceSlider();
 };
+
+W.quickAddGift = function(){ W.cancelEditGift(); W.aTab('Add'); openAdmin(); };
 
 W.$('btnAddGift').addEventListener('click', function(){
   var type=document.querySelector('input[name="gt"]:checked').value;
