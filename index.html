@@ -88,7 +88,6 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 .sec-title{font-family:var(--font-serif);font-size:var(--fs-section-title);font-weight:400;color:var(--dark-charcoal);margin-top:8px;letter-spacing:0.01em}
 
 /* INFO CARDS */
-/* INFO — layout editorial de 2 colunas */
 #sInfo{position:relative;overflow:hidden}
 .sec-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;max-width:150%;height:auto;color:var(--dark-charcoal);opacity:.05;pointer-events:none;z-index:0}
 .info-columns{display:grid;grid-template-columns:1fr 1fr;gap:96px;text-align:left;position:relative;z-index:1}
@@ -109,21 +108,13 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 .map-wrap iframe{display:block;width:100%;height:340px;border:none}
 .info-addr{font-size:var(--fs-body);color:var(--dark-charcoal);line-height:1.8}
 
-/* SPOTIFY BLOCK */
-.spotify-sec{background:var(--dark-charcoal);padding:5rem var(--sp-lg);text-align:center}
-.spotify-inner{max-width:680px;margin:0 auto}
-.spotify-lbl{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent-beige);margin-bottom:8px;font-weight:700}
-.spotify-title{font-family:var(--font-serif);font-size:clamp(1.8rem,4vw,2.5rem);font-weight:300;color:var(--bg-white);margin-bottom:28px;letter-spacing:0.02em}
-.spotify-wrap{border-radius:0px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.25)}
-.spotify-wrap iframe{display:block;width:100%;border:none;border-radius:0px}
-
 /* GALLERY — Nossa História */
-.gallery-sec{background:var(--dark-charcoal);padding:5rem var(--sp-lg);text-align:center}
+.gallery-sec{background:#1a1a1a;padding:5rem var(--sp-lg);text-align:center}
 .gallery-inner{max-width:1200px;margin:0 auto}
 .gallery-lbl{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent-beige);margin-bottom:8px;font-weight:700}
 .gallery-title{font-family:var(--font-serif);font-size:clamp(1.8rem,4vw,2.5rem);font-weight:300;color:var(--bg-white);margin-bottom:40px;letter-spacing:0.02em}
 .carousel-wrap{position:relative;max-width:640px;margin:0 auto;aspect-ratio:4/5;border-radius:var(--r-sm);overflow:hidden;background:rgba(255,255,255,0.03)}
-.carousel-wrap img{width:100%;height:100%;object-fit:cover;border-radius:var(--r-sm);transition:opacity 0.4s ease; cursor:zoom-in;}
+.carousel-wrap img{width:100%;height:100%;object-fit:contain;border-radius:var(--r-sm);transition:opacity 0.4s ease; cursor:zoom-in;}
 .carousel-wrap img.fading{opacity:0}
 .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(17,17,17,0.45);color:var(--bg-white);border:1px solid rgba(255,255,255,0.35);font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--t);backdrop-filter:blur(4px)}
 .carousel-btn:hover{background:rgba(17,17,17,0.75);border-color:rgba(255,255,255,0.6)}
@@ -141,7 +132,19 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 .lb-ov { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; flex-direction:column; }
 .lb-ov.open { display:flex; }
 .lb-img { max-width:90vw; max-height:85vh; object-fit:contain; border-radius:var(--r-sm); box-shadow:0 20px 50px rgba(0,0,0,0.5); }
-.lb-close { position:absolute; top:20px; right:24px; background:none; border:none; color:#fff; font-size:32px; cursor:pointer; line-height:1; }
+.lb-close { position:absolute; top:20px; right:24px; background:none; border:none; color:#fff; font-size:32px; cursor:pointer; line-height:1; z-index:10001; }
+.lb-btn { position:absolute; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--bg-white); font-size:36px; cursor:pointer; padding:16px; z-index:10000; opacity:0.6; transition:var(--t); }
+.lb-btn:hover { opacity:1; }
+.lb-prev { left:0; }
+.lb-next { right:0; }
+
+/* SPOTIFY BLOCK */
+.spotify-sec{background:var(--dark-charcoal);padding:5rem var(--sp-lg);text-align:center}
+.spotify-inner{max-width:680px;margin:0 auto}
+.spotify-lbl{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent-beige);margin-bottom:8px;font-weight:700}
+.spotify-title{font-family:var(--font-serif);font-size:clamp(1.8rem,4vw,2.5rem);font-weight:300;color:var(--bg-white);margin-bottom:28px;letter-spacing:0.02em}
+.spotify-wrap{border-radius:0px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.spotify-wrap iframe{display:block;width:100%;border:none;border-radius:0px}
 
 /* RSVP BOX */
 .rsvp-bg{background:var(--accent-beige);padding:var(--sp-2xl) var(--sp-lg)}
@@ -456,7 +459,7 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
         <select id="rA"><option value="">Selecione sua resposta...</option><option value="s">Confirmado! Estarei lá 🎉</option><option value="n">Infelizmente não poderei comparecer</option></select>
       </div>
       <div class="fg" id="rNG" style="display:none">
-        <label>Você levará acompanhantes extras?</label>
+        <label>Você dará carona para outros convidados da lista?</label>
         <input id="rNum" type="number" min="0" max="20" value="0">
       </div>
       <div id="rCompanions"></div>
@@ -631,9 +634,11 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
   </div>
 </div>
 
-<div class="lb-ov" id="lbOv">
+<div class="lb-ov" id="lbOv" onclick="W.closeLightbox()">
   <button class="lb-close" onclick="W.closeLightbox()">×</button>
-  <img class="lb-img" id="lbImg" src="">
+  <button class="lb-btn lb-prev" onclick="event.stopPropagation(); W.galleryPrev()">‹</button>
+  <img class="lb-img" id="lbImg" src="" onclick="event.stopPropagation()">
+  <button class="lb-btn lb-next" onclick="event.stopPropagation(); W.galleryNext()">›</button>
 </div>
 
 <script>
@@ -710,7 +715,6 @@ function refreshAuthUI(){
 }
 
 // Monitoramento de sessão via Supabase Auth — mantém o admin logado
-// com segurança entre recarregamentos de página através do token JWT.
 if(sb){
   sb.auth.onAuthStateChange(function(event, session){
     W.adm = !!session;
@@ -828,7 +832,7 @@ function rsvpRowHtml(r){
       if(c) companionsHtml += '<div style="font-size:11px;color:var(--text-muted);padding-left:8px;margin-top:2px">↳ ' + esc(c) + '</div>';
     });
   }
-  return '<div class="rsvp-row"><div><div>' + esc(r.name) + (r.num > 0 ? ' <small style="color:var(--text-muted)">(+' + r.num + ' acompanhante' + (r.num>1?'s':'') + ' extra' + (r.num>1?'s':'') + ')</small>' : '') + '</div>' + companionsHtml + '</div><span class="' + (r.att === 's' ? 'tag-y' : 'tag-n') + '">' + (r.att === 's' ? '✓ Confirmado' : '✗ Não virá') + '</span></div>';
+  return '<div class="rsvp-row"><div><div>' + esc(r.name) + (r.num > 0 ? ' <small style="color:var(--text-muted)">(+' + r.num + ' carona' + (r.num>1?'s':'') + ')</small>' : '') + '</div>' + companionsHtml + '</div><span class="' + (r.att === 's' ? 'tag-y' : 'tag-n') + '">' + (r.att === 's' ? '✓ Confirmado' : '✗ Não virá') + '</span></div>';
 }
 
 function updComp(){
@@ -836,9 +840,9 @@ function updComp(){
   W.$('rNG').style.display = att==='s' ? 'block' : 'none';
   var cf = W.$('rCompanions');
   if(att!=='s' || num<=0){ cf.innerHTML=''; return; }
-  var h='<div style="font-size:11px;letter-spacing:.06em;color:var(--text-muted);margin:14px 0 10px">Nome dos acompanhantes</div>';
+  var h='<div style="font-size:11px;letter-spacing:.06em;color:var(--text-muted);margin:14px 0 10px">Nome dos convidados</div>';
   for(var i=1;i<=num;i++){
-    h += '<div class="fg"><input type="text" id="rC'+i+'" placeholder="Nome do acompanhante '+i+'"></div>';
+    h += '<div class="fg"><input type="text" id="rC'+i+'" placeholder="Nome do convidado '+i+'"></div>';
   }
   cf.innerHTML = h;
 }
@@ -876,7 +880,7 @@ function renderRSVPs(){
 
 W.csvRsvp = function(){
   if(!D.rsvps.length){ W.toast('Nenhuma confirmação ainda.'); return; }
-  var rows=[['Nome','Situação','Total de Pessoas','Acompanhantes','Data de Confirmação']];
+  var rows=[['Nome','Situação','Total de Pessoas','Caronas','Data de Confirmação']];
   D.rsvps.forEach(function(r){ rows.push([r.name, r.att==='s'?'Confirmado':'Não virá', r.att==='s'?(1+(r.num||0)):0, (r.companions||[]).filter(Boolean).join(' | '), fmtDate(r.ts)]); });
   dlCsv(rows,'confirmacoes_presenca.csv');
   W.toast('Relatório exportado! ✓');
@@ -1410,6 +1414,13 @@ function galleryRender(){
       activeThumb.classList.add('on');
       // Scroll automático e suave para manter a miniatura em foco
       activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+    
+    // Atualiza a imagem do Lightbox instantaneamente se ele estiver aberto
+    var lbOv = W.$('lbOv');
+    var lbImg = W.$('lbImg');
+    if (lbOv && lbOv.classList.contains('open') && lbImg) {
+      lbImg.src = nextSrc;
     }
     
     img.classList.remove('fading');
