@@ -924,8 +924,10 @@ function gCard(g){
   var ctH=g.cat?'<div class="gcat">'+esc(g.cat)+'</div>':'';
   var dcH=g.desc?'<div class="gdesc">'+esc(g.desc).replace(/\n/g,'<br>')+'</div>':'';
   var ex='';
+  var quotaFull=false;
   if(g.type==='quota'){
     var tk=g.taken||0,tot=g.qtot||1,pct=Math.round(tk/tot*100);
+    quotaFull = tk>=tot;
     ex='<div class="qinfo">'+tk+' de '+tot+' cotas reservadas</div><div class="qbar"><div class="qfill" style="width:'+pct+'%"></div></div><button class="btn-q" data-gid="'+g.id+'" '+(tk>=tot?'disabled':'')+'>'+( tk>=tot?'Esgotado':'Reservar cotas')+'</button>';
   } else if(g.type==='url'){
     var lks='';
@@ -933,9 +935,9 @@ function gCard(g){
     if(g.url2)lks+='<button class="glink" data-url="'+esc(g.url2)+'"><span style="flex:1;text-align:left">'+esc(g.lbl2||'Loja 2')+'</span><span>→</span></button>';
     ex=(lks?'<div class="glinks">'+lks+'</div>':'')+'<button class="btn-res" data-gid="'+g.id+'" '+(done?'disabled':'')+'>'+( done?'Marcado ✓':'Marcar como comprado')+'</button>';
   } else {
-    ex='<button class="btn-res" data-gid="'+g.id+'" '+(done?'disabled':'')+'>'+( done?'Reservado por '+esc(g.reservedBy):'Reservar presente')+'</button>';
+    ex='<button class="btn-res" data-gid="'+g.id+'" '+(done?'disabled':'')+'>'+( done?'Reservado':'Reservar presente')+'</button>';
   }
-  return '<div class="gcard'+(done&&g.type!=='quota'?' done':'')+'">'+adminBtns+imgH+badge+'<div class="gbody">'+ctH+'<div class="gtitle">'+esc(g.title)+'</div>'+dcH+prH+ex+'</div></div>';
+  return '<div class="gcard'+((done||quotaFull)?' done':'')+'">'+adminBtns+imgH+badge+'<div class="gbody">'+ctH+'<div class="gtitle">'+esc(g.title)+'</div>'+dcH+prH+ex+'</div></div>';
 }
 
 function renderGifts(){
