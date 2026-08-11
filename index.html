@@ -871,7 +871,17 @@ W.$('btnRsvp').addEventListener('click', function(){
 function renderRSVPs(){
   var el=W.$('rList');
   if(!D.rsvps.length || !W.adm){ el.innerHTML=''; return; }
-  var h='<div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dark-charcoal);margin-bottom:8px;font-weight:700">Confirmações recebidas</div>';
+  
+  // Lógica nova do Contador de Confirmados
+  var totalConfirmed = 0;
+  D.rsvps.forEach(function(r){
+    if(r.att === 's'){
+      totalConfirmed += 1 + (parseInt(r.num) || 0);
+    }
+  });
+
+  var h='<div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dark-charcoal);margin-bottom:8px;font-weight:700">Confirmações recebidas &middot; <span style="opacity:0.6">Total: ' + totalConfirmed + ' confirmados</span></div>';
+  
   D.rsvps.slice().reverse().forEach(function(r){
     h += rsvpRowHtml(r);
   });
