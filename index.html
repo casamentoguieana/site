@@ -123,13 +123,25 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 .gallery-lbl{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent-beige);margin-bottom:8px;font-weight:700}
 .gallery-title{font-family:var(--font-serif);font-size:clamp(1.8rem,4vw,2.5rem);font-weight:300;color:var(--bg-white);margin-bottom:40px;letter-spacing:0.02em}
 .carousel-wrap{position:relative;max-width:640px;margin:0 auto;aspect-ratio:4/5;border-radius:var(--r-sm);overflow:hidden;background:rgba(255,255,255,0.03)}
-.carousel-wrap img{width:100%;height:100%;object-fit:cover;border-radius:var(--r-sm);transition:opacity 0.4s ease}
+.carousel-wrap img{width:100%;height:100%;object-fit:cover;border-radius:var(--r-sm);transition:opacity 0.4s ease; cursor:zoom-in;}
 .carousel-wrap img.fading{opacity:0}
 .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(17,17,17,0.45);color:var(--bg-white);border:1px solid rgba(255,255,255,0.35);font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--t);backdrop-filter:blur(4px)}
 .carousel-btn:hover{background:rgba(17,17,17,0.75);border-color:rgba(255,255,255,0.6)}
 .carousel-btn-prev{left:16px}
 .carousel-btn-next{right:16px}
 .carousel-counter{font-family:var(--font-serif);font-size:16px;color:var(--accent-beige);margin-top:20px;letter-spacing:0.04em}
+
+/* LIGHTBOX & THUMBNAILS */
+.thumb-strip { display:flex; gap:8px; overflow-x:auto; padding:16px 0; margin-top:8px; scroll-behavior:smooth; max-width:640px; margin-left:auto; margin-right:auto; }
+.thumb-strip::-webkit-scrollbar { height:4px; }
+.thumb-strip::-webkit-scrollbar-thumb { background:var(--accent-beige); border-radius:4px; }
+.thumb-img { width:60px; height:60px; object-fit:cover; border-radius:var(--r-sm); cursor:pointer; opacity:0.4; transition:var(--t); border:2px solid transparent; flex-shrink:0; }
+.thumb-img:hover { opacity:0.8; }
+.thumb-img.on { opacity:1; border-color:var(--bg-white); box-shadow:0 0 0 1px var(--dark-charcoal); }
+.lb-ov { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; flex-direction:column; }
+.lb-ov.open { display:flex; }
+.lb-img { max-width:90vw; max-height:85vh; object-fit:contain; border-radius:var(--r-sm); box-shadow:0 20px 50px rgba(0,0,0,0.5); }
+.lb-close { position:absolute; top:20px; right:24px; background:none; border:none; color:#fff; font-size:32px; cursor:pointer; line-height:1; }
 
 /* RSVP BOX */
 .rsvp-bg{background:var(--accent-beige);padding:var(--sp-2xl) var(--sp-lg)}
@@ -412,11 +424,12 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
   <div class="gallery-inner">
     <div class="gallery-title">Galeria</div>
     <div class="carousel-wrap">
-      <img id="galleryImg" src="fotogaleria1.jpg" alt="Momentos Gui e Ana">
+      <img id="galleryImg" src="fotogaleria1.jpg" alt="Momentos Gui e Ana" onclick="W.openLightbox()">
       <button class="carousel-btn carousel-btn-prev" onclick="W.galleryPrev()" aria-label="Foto anterior">‹</button>
       <button class="carousel-btn carousel-btn-next" onclick="W.galleryNext()" aria-label="Próxima foto">›</button>
     </div>
     <div class="carousel-counter" id="galleryCounter">1 / 20</div>
+    <div class="thumb-strip" id="thumbStrip"></div>
   </div>
 </section>
 
@@ -616,6 +629,11 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
     <button class="x" onclick="W.$('ovModal').classList.remove('open')">×</button>
     <div id="mBody"></div>
   </div>
+</div>
+
+<div class="lb-ov" id="lbOv">
+  <button class="lb-close" onclick="W.closeLightbox()">×</button>
+  <img class="lb-img" id="lbImg" src="">
 </div>
 
 <script>
@@ -1320,6 +1338,7 @@ function init(){
     }
     initPriceSlider();
     renderFilters(); renderGifts(); renderRSVPs(); startCD();
+    W.initGallery();
 
     if(W.adm) W.$('btnAdm').textContent='Painel';
   } catch (err) {
@@ -1350,16 +1369,56 @@ function init(){
 var galleryTotal = 20;
 var galleryCurrent = 1;
 
+W.initGallery = function() {
+  var strip = W.$('thumbStrip');
+  if(!strip) return;
+  var htmlStr = '';
+  for(var i = 1; i <= galleryTotal; i++){
+    var ext = (i <= 14) ? '.jpg' : '.png';
+    var src = 'fotogaleria' + i + ext;
+    var cls = 'thumb-img' + (i === 1 ? ' on' : '');
+    htmlStr += '<img src="'+src+'" class="'+cls+'" id="tThumb'+i+'" onclick="W.goToGallery('+i+')">';
+  }
+  strip.innerHTML = htmlStr;
+};
+
+W.goToGallery = function(index) {
+  if (index === galleryCurrent) return;
+  galleryCurrent = index;
+  galleryRender();
+};
+
 function galleryRender(){
   var img = W.$('galleryImg');
   var counter = W.$('galleryCounter');
   if(!img || !counter) return;
+  
   img.classList.add('fading');
   setTimeout(function(){
     var ext = (galleryCurrent <= 14) ? '.jpg' : '.png';
-    img.src = 'fotogaleria' + galleryCurrent + ext;
+    var nextSrc = 'fotogaleria' + galleryCurrent + ext;
+    
+    img.src = nextSrc;
     counter.textContent = galleryCurrent + ' / ' + galleryTotal;
+    
+    // Atualiza a seleção nas miniaturas
+    document.querySelectorAll('.thumb-img').forEach(function(el) {
+      el.classList.remove('on');
+    });
+    var activeThumb = W.$('tThumb' + galleryCurrent);
+    if(activeThumb) {
+      activeThumb.classList.add('on');
+      // Scroll automático e suave para manter a miniatura em foco
+      activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+    
     img.classList.remove('fading');
+    
+    // Pré-carregamento dinâmico e silencioso da próxima imagem
+    var nextIdx = (galleryCurrent >= galleryTotal) ? 1 : galleryCurrent + 1;
+    var nextExt = (nextIdx <= 14) ? '.jpg' : '.png';
+    new Image().src = 'fotogaleria' + nextIdx + nextExt;
+    
   }, 200);
 }
 
@@ -1371,6 +1430,21 @@ W.galleryNext = function(){
 W.galleryPrev = function(){
   galleryCurrent = (galleryCurrent <= 1) ? galleryTotal : galleryCurrent - 1;
   galleryRender();
+};
+
+// --- Funções do Lightbox ---
+W.openLightbox = function(){
+  var lbOv = W.$('lbOv');
+  var lbImg = W.$('lbImg');
+  var mainImg = W.$('galleryImg');
+  if(!lbOv || !lbImg || !mainImg) return;
+  lbImg.src = mainImg.src;
+  lbOv.classList.add('open');
+};
+
+W.closeLightbox = function(){
+  var lbOv = W.$('lbOv');
+  if(lbOv) lbOv.classList.remove('open');
 };
 
 init();
