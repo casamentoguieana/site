@@ -117,6 +117,20 @@ nav{background:transparent;border-bottom:none;padding:32px var(--sp-lg);height:a
 .spotify-wrap{border-radius:0px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.25)}
 .spotify-wrap iframe{display:block;width:100%;border:none;border-radius:0px}
 
+/* GALLERY — Nossa História */
+.gallery-sec{background:var(--dark-charcoal);padding:5rem var(--sp-lg);text-align:center}
+.gallery-inner{max-width:1200px;margin:0 auto}
+.gallery-lbl{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--accent-beige);margin-bottom:8px;font-weight:700}
+.gallery-title{font-family:var(--font-serif);font-size:clamp(1.8rem,4vw,2.5rem);font-weight:300;color:var(--bg-white);margin-bottom:40px;letter-spacing:0.02em}
+.carousel-wrap{position:relative;max-width:640px;margin:0 auto;aspect-ratio:4/5;border-radius:var(--r-sm);overflow:hidden;background:rgba(255,255,255,0.03)}
+.carousel-wrap img{width:100%;height:100%;object-fit:cover;border-radius:var(--r-sm);transition:opacity 0.4s ease}
+.carousel-wrap img.fading{opacity:0}
+.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(17,17,17,0.45);color:var(--bg-white);border:1px solid rgba(255,255,255,0.35);font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--t);backdrop-filter:blur(4px)}
+.carousel-btn:hover{background:rgba(17,17,17,0.75);border-color:rgba(255,255,255,0.6)}
+.carousel-btn-prev{left:16px}
+.carousel-btn-next{right:16px}
+.carousel-counter{font-family:var(--font-serif);font-size:16px;color:var(--accent-beige);margin-top:20px;letter-spacing:0.04em}
+
 /* RSVP BOX */
 .rsvp-bg{background:var(--accent-beige);padding:var(--sp-2xl) var(--sp-lg)}
 .rsvp-inner{max-width:560px;margin:0 auto}
@@ -271,6 +285,10 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
   .spotify-wrap iframe{height:250px}
   .tab{padding:8px 10px;font-size:10px}
   .csv-row{flex-direction:column}
+  .carousel-wrap{max-width:100%;aspect-ratio:3/4}
+  .carousel-btn{width:38px;height:38px;font-size:20px}
+  .carousel-btn-prev{left:8px}
+  .carousel-btn-next{right:8px}
 }
 @media(max-width:400px){
   :root{ --fs-hero:40px; }
@@ -294,9 +312,10 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 <nav>
   <div class="nav-links">
     <button class="nl" onclick="W.go('sInfo')">Evento</button>
+    <button class="nl" onclick="W.go('sGallery')">Galeria</button>
+    <button class="nl" onclick="W.go('sSpotify')">Playlist</button>
     <button class="nl" onclick="W.go('sRsvp')">Presença</button>
     <button class="nl" onclick="W.go('sGifts')">Presentes</button>
-    <button class="nl" onclick="W.go('sSpotify')">Playlist</button>
   </div>
   <div class="nav-right">
     <button class="hamburger" id="hamburger" onclick="W.toggleMenu()" aria-label="Menu">
@@ -308,9 +327,10 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 <div class="mobile-menu" id="mobileMenu">
   <button class="mobile-menu-close" onclick="W.toggleMenu()" aria-label="Fechar menu">Fechar ✕</button>
   <button class="nl" onclick="W.go('sInfo');W.toggleMenu()">Evento</button>
+  <button class="nl" onclick="W.go('sGallery');W.toggleMenu()">Galeria</button>
+  <button class="nl" onclick="W.go('sSpotify');W.toggleMenu()">Playlist</button>
   <button class="nl" onclick="W.go('sRsvp');W.toggleMenu()">Presença</button>
   <button class="nl" onclick="W.go('sGifts');W.toggleMenu()">Presentes</button>
-  <button class="nl" onclick="W.go('sSpotify');W.toggleMenu()">Playlist</button>
 </div>
 
 <section class="hero" id="sTop">
@@ -385,6 +405,18 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
   </div>
 </section>
 
+<section class="gallery-sec" id="sGallery">
+  <div class="gallery-inner">
+    <div class="gallery-title">Galeria</div>
+    <div class="carousel-wrap">
+      <img id="galleryImg" src="fotogaleria1.jpg" alt="Momentos Gui e Ana">
+      <button class="carousel-btn carousel-btn-prev" onclick="W.galleryPrev()" aria-label="Foto anterior">‹</button>
+      <button class="carousel-btn carousel-btn-next" onclick="W.galleryNext()" aria-label="Próxima foto">›</button>
+    </div>
+    <div class="carousel-counter" id="galleryCounter">1 / 20</div>
+  </div>
+</section>
+
 <section class="spotify-sec" id="sSpotify">
   <div class="spotify-inner">
     <div class="spotify-lbl">Trilha Sonora Oficial</div>
@@ -396,7 +428,6 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy"></iframe>
     </div>
-    <p style="font-size:12px;color:var(--accent-beige);margin-top:16px;opacity:.7">Sintonize a playlist e navegue escutando nossas músicas favoritas 🎵</p>
   </div>
 </section>
 
@@ -1261,6 +1292,33 @@ function init(){
     });
   }
 }
+
+// ── GALLERY CAROUSEL — Nossa História (vanilla JS, cíclico) ──
+var galleryTotal = 20;
+var galleryCurrent = 1;
+
+function galleryRender(){
+  var img = W.$('galleryImg');
+  var counter = W.$('galleryCounter');
+  if(!img || !counter) return;
+  img.classList.add('fading');
+  setTimeout(function(){
+    var ext = (galleryCurrent <= 14) ? '.jpg' : '.png';
+    img.src = 'fotogaleria' + galleryCurrent + ext;
+    counter.textContent = galleryCurrent + ' / ' + galleryTotal;
+    img.classList.remove('fading');
+  }, 200);
+}
+
+W.galleryNext = function(){
+  galleryCurrent = (galleryCurrent >= galleryTotal) ? 1 : galleryCurrent + 1;
+  galleryRender();
+};
+
+W.galleryPrev = function(){
+  galleryCurrent = (galleryCurrent <= 1) ? galleryTotal : galleryCurrent - 1;
+  galleryRender();
+};
 
 init();
 })();
