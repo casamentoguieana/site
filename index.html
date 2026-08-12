@@ -312,6 +312,31 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 @media(max-width:400px){
   :root{ --fs-hero:40px; }
 }
+  .toast{
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: var(--dark-charcoal);
+  color: var(--bg-white);
+  padding: 12px 24px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  z-index: 99999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  max-width: 90vw;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.toast.on{
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
 </style>
 </head>
 <body>
