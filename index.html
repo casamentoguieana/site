@@ -219,7 +219,7 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
 /* OVERLAYS & MODALS */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:flex-start;justify-content:center;padding:var(--sp-md);overflow-y:auto;backdrop-filter:blur(4px)}
 .ov.open{display:flex}
-.panel{background:var(--bg-light);border-radius:var(--r-sm);padding:var(--sp-lg) 32px;width:100%;max-width:500px;position:relative;margin:auto;box-shadow:0 30px 70px rgba(0,0,0,.35)}
+.panel{background:var(--bg-light);border-radius:var(--r-sm);padding:var(--sp-lg) 32px;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;margin:auto;box-shadow:0 30px 70px rgba(0,0,0,.35)}
 .panel h2{font-family:var(--font-serif);font-size:1.8rem;color:var(--dark-charcoal);margin-bottom:20px;font-weight:300;letter-spacing:0.02em}
 .x{position:absolute;top:16px;right:20px;font-size:1.8rem;color:var(--text-muted);cursor:pointer;line-height:1;transition:var(--t)}
 .x:hover{color:var(--dark-charcoal)}
