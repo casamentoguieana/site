@@ -849,26 +849,39 @@ function updComp(){
 W.$('rA').addEventListener('change', updComp);
 W.$('rNum').addEventListener('input', updComp);
 
-W.$('btnRsvp').addEventListener('click', function(){
+W.$('btnRsvp').addEventListener('click', async function(){
   var name=W.$('rN').value.trim(), att=W.$('rA').value, num=parseInt(W.$('rNum').value)||0;
   if(!name||!att){ W.toast('Preencha nome e confirmação.'); return; }
+  
   var comps=[];
   if(att==='s'&&num>0){ for(var i=1;i<=num;i++){ var el=W.$('rC'+i); comps.push(el?el.value.trim():''); } }
-  var r = {  id: crypto.randomUUID(),  name: name,   att: att,   num: num,   companions: comps,   ts: Date.now() };
-  D.rsvps.push(r);
-  dbAddRsvp(r);
-  W.$('rN').value=''; W.$('rA').value=''; W.$('rNum').value=0;
-  W.$('rNG').style.display='none'; W.$('rCompanions').innerHTML='';
-  renderRSVPs();
-  W.toast(att==='s'?'Presença confirmada! 🎉':'Resposta registrada!');
-  if(att === 's'){
-        var waMsgRsvp = "Oi Gui e Ana! Acabei de confirmar minha presença no casamento. Estou muito feliz em celebrar esse dia com vocês!";
-        if (num > 0) {
-          waMsgRsvp += "\n\nConfirmei a presença de mais " + num + (num > 1 ? " pessoas." : " pessoa.");
-        }
-        var waUrlRsvp = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsgRsvp);
-        window.open(waUrlRsvp, '_blank');
-      } 
+  
+  // ID seguro e sem risco de colisão
+  var r={ id: crypto.randomUUID(), name:name, att:att, num:att==='s'?num:0, companions:comps, ts:Date.now() };
+  
+  var win = window.open('', '_blank');
+  try {
+    await dbAddRsvp(r);
+    D.rsvps.push(r);
+    W.$('rN').value=''; W.$('rA').value=''; W.$('rNum').value=0;
+    W.$('rNG').style.display='none'; W.$('rCompanions').innerHTML='';
+    renderRSVPs();
+    W.toast(att==='s'?'Presença confirmada! 🎉':'Resposta registrada!');
+    
+    if(att === 's'){
+      var waMsgRsvp = "Oi Gui e Ana! Acabei de confirmar minha presença no casamento. Estou muito feliz em celebrar esse dia com vocês!";
+      if (num > 0) {
+        waMsgRsvp += "\n\nConfirmei a presença de mais " + num + (num > 1 ? " pessoas." : " pessoa.");
+      }
+      win.location.href = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsgRsvp);
+    } else {
+      if (win) win.close(); // Fecha a aba se optou por não ir
+    }
+  } catch(e) {
+    if (win) win.close(); // Fecha a aba órfã se houver falha de rede/banco
+    W.toast('Erro ao salvar. Tente novamente.');
+    console.error(e);
+  }
 });
 
 function renderRSVPs(){
@@ -1013,43 +1026,51 @@ function openModal(id){
     W.$('btnResQ').addEventListener('click', async function(){
       var name=W.$('mN').value.trim(); if(!name){ W.toast('Informe seu nome.'); return; }
       
-      // Proteção iOS + Anti-duplo clique
       var btn = this;
       btn.disabled = true;
       var win = window.open('', '_blank');
       
-      g.taken=(g.taken||0)+qVal;
-      if(!g.reservations)g.reservations=[];
-      g.reservations.push({name:name,qty:qVal,ts:Date.now()});
-      await dbUpdateGift(g);
-      
-      renderGifts(); W.$('ovModal').classList.remove('open');
-      W.toast(qVal+' cota(s) reservada(s)! 🎉');
-      
-      var waMsg = "Oi Gui e Ana! Parabéns pelo casamento! Passando para avisar que acabei de reservar o presente " + g.title;
-      var waUrl = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsg);
-      win.location.href = waUrl;
+      try {
+        g.taken=(g.taken||0)+qVal;
+        if(!g.reservations)g.reservations=[];
+        g.reservations.push({name:name,qty:qVal,ts:Date.now()});
+        await dbUpdateGift(g);
+        
+        renderGifts(); W.$('ovModal').classList.remove('open');
+        W.toast(qVal+' cota(s) reservada(s)! 🎉');
+        
+        var waMsg = "Oi Gui e Ana! Parabéns pelo casamento! Passando para avisar que acabei de reservar o presente " + g.title;
+        win.location.href = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsg);
+      } catch(e) {
+        if (win) win.close(); // Fecha a aba órfã em caso de erro
+        W.toast('Erro ao salvar. Tente novamente.');
+        btn.disabled = false;
+      }
     });
   } else {
     mb.innerHTML='<h3>'+esc(g.title)+'</h3>'+imgH+dcH+prH+(g.type==='url'?'<p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Após a compra, confirme sua reserva abaixo.</p>':'')+'<div class="fg"><label>Seu nome</label><input id="mN" type="text" placeholder="Como quer ser identificado(a)"></div><button class="btn-main" id="btnResG">Confirmar reserva</button>';
-    W.$('btnResG').addEventListener('click', async function(){
+   W.$('btnResG').addEventListener('click', async function(){
       var name=W.$('mN').value.trim(); if(!name){ W.toast('Informe seu nome.'); return; }
       
-      // Proteção iOS + Anti-duplo clique
       var btn = this;
       btn.disabled = true;
       var win = window.open('', '_blank');
       
-      g.reservedBy=name; g.reservedTs=Date.now();
-      await dbUpdateGift(g);
-      
-      renderGifts(); W.$('ovModal').classList.remove('open');
-      W.toast('Presente reservado! 🎉');
-      
-      var waMsg = "Oi Gui e Ana! Parabéns pelo casamento! Passando para avisar que acabei de reservar o presente " + g.title;
-      var waUrl = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsg);
-      win.location.href = waUrl;
-    });    
+      try {
+        g.reservedBy=name; g.reservedTs=Date.now();
+        await dbUpdateGift(g);
+        
+        renderGifts(); W.$('ovModal').classList.remove('open');
+        W.toast('Presente reservado! 🎉');
+        
+        var waMsg = "Oi Gui e Ana! Parabéns pelo casamento! Passando para avisar que acabei de reservar o presente " + g.title;
+        win.location.href = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsg);
+      } catch(e) {
+        if (win) win.close(); // Fecha a aba órfã em caso de erro
+        W.toast('Erro ao salvar. Tente novamente.');
+        btn.disabled = false;
+      }
+    });  
   }
   W.$('ovModal').classList.add('open');
   setTimeout(function(){ var el=W.$('mN'); if(el)el.focus(); },80);
