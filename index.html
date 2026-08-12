@@ -854,7 +854,7 @@ W.$('btnRsvp').addEventListener('click', function(){
   if(!name||!att){ W.toast('Preencha nome e confirmação.'); return; }
   var comps=[];
   if(att==='s'&&num>0){ for(var i=1;i<=num;i++){ var el=W.$('rC'+i); comps.push(el?el.value.trim():''); } }
-  var r={ id: Date.now().toString(36)+Math.random().toString(36).slice(2,5), name:name, att:att, num:att==='s'?num:0, companions:comps, ts:Date.now() };
+  var r = {  id: crypto.randomUUID(),  name: name,   att: att,   num: num,   companions: comps,   ts: Date.now() };
   D.rsvps.push(r);
   dbAddRsvp(r);
   W.$('rN').value=''; W.$('rA').value=''; W.$('rNum').value=0;
