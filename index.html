@@ -856,7 +856,6 @@ W.$('btnRsvp').addEventListener('click', async function(){
   var comps=[];
   if(att==='s'&&num>0){ for(var i=1;i<=num;i++){ var el=W.$('rC'+i); comps.push(el?el.value.trim():''); } }
   
-  // ID seguro e sem risco de colisão
   var r={ id: crypto.randomUUID(), name:name, att:att, num:att==='s'?num:0, companions:comps, ts:Date.now() };
   
   var win = window.open('', '_blank');
@@ -875,10 +874,10 @@ W.$('btnRsvp').addEventListener('click', async function(){
       }
       win.location.href = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsgRsvp);
     } else {
-      if (win) win.close(); // Fecha a aba se optou por não ir
+      if (win) win.close();
     }
   } catch(e) {
-    if (win) win.close(); // Fecha a aba órfã se houver falha de rede/banco
+    if (win) win.close(); // Fecha a aba órfã se houver erro de rede/banco
     W.toast('Erro ao salvar. Tente novamente.');
     console.error(e);
   }
@@ -1042,7 +1041,7 @@ function openModal(id){
         var waMsg = "Oi Gui e Ana! Parabéns pelo casamento! Passando para avisar que acabei de reservar o presente " + g.title;
         win.location.href = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsg);
       } catch(e) {
-        if (win) win.close(); // Fecha a aba órfã em caso de erro
+        if (win) win.close(); // Fecha a aba órfã se der erro
         W.toast('Erro ao salvar. Tente novamente.');
         btn.disabled = false;
       }
@@ -1066,11 +1065,11 @@ function openModal(id){
         var waMsg = "Oi Gui e Ana! Parabéns pelo casamento! Passando para avisar que acabei de reservar o presente " + g.title;
         win.location.href = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsg);
       } catch(e) {
-        if (win) win.close(); // Fecha a aba órfã em caso de erro
+        if (win) win.close(); // Fecha a aba órfã se der erro
         W.toast('Erro ao salvar. Tente novamente.');
         btn.disabled = false;
       }
-    });  
+    });
   }
   W.$('ovModal').classList.add('open');
   setTimeout(function(){ var el=W.$('mN'); if(el)el.focus(); },80);
