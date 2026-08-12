@@ -582,6 +582,8 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
       <div class="fg"><label>Instruções / Chave Pix (Opcional)</label><textarea id="gDesc" rows="2" placeholder="Informações adicionais para o convidado..."></textarea></div>
       <div class="fg">
         <label>Upload da Vitrine</label>
+        
+        <!-- Zona exclusiva para arquivos locais -->
         <div class="upload-zone" id="uploadZone">
           <input type="file" id="gImgFile" accept="image/*" style="display:none">
           <div id="gImgPreviewWrap" class="prev-img-wrap">
@@ -594,12 +596,15 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
             <button class="fbtn" id="btnUploadImg" type="button" style="margin:0 auto">📁 Carregar Mídia</button>
             <div style="font-size:9px;color:var(--text-muted);margin-top:6px">Formatos aceitos: PNG, JPG ou WEBP</div>
           </div>
-          <div class="or-divider"><span>ou use uma imagem da web</span></div>
-          <div class="frow" style="margin-bottom:0">
-            <input id="gImg" type="text" placeholder="Cole a URL direta da imagem aqui...">
-            <button class="fbtn" id="fbM" type="button">Mapear</button>
-          </div>
         </div>
+
+        <!-- Parte da URL da web totalmente livre para clique e colagem -->
+        <div class="or-divider"><span>ou use uma imagem da web</span></div>
+        <div class="frow" style="margin-bottom:0">
+          <input id="gImg" type="text" placeholder="Cole a URL direta da imagem aqui...">
+          <button class="fbtn" id="fbM" type="button">Mapear</button>
+        </div>
+        
         <div class="pbox" id="pvM"><img class="pimg" id="pvImgM" src="" alt=""><div class="pinfo"><div class="ptit" id="pvTM"></div><div class="pprc" id="pvPM"></div></div><button class="buse" id="buseM" type="button">Aplicar</button></div>
         <div class="ferr" id="peM"></div>
       </div>
