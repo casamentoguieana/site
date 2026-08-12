@@ -1012,28 +1012,44 @@ function openModal(id){
     W.$('qPlus').addEventListener('click',function(){ qVal=Math.min(qMax,qVal+1); W.$('qV').textContent=qVal; });
     W.$('btnResQ').addEventListener('click', async function(){
       var name=W.$('mN').value.trim(); if(!name){ W.toast('Informe seu nome.'); return; }
+      
+      // Proteção iOS + Anti-duplo clique
+      var btn = this;
+      btn.disabled = true;
+      var win = window.open('', '_blank');
+      
       g.taken=(g.taken||0)+qVal;
       if(!g.reservations)g.reservations=[];
       g.reservations.push({name:name,qty:qVal,ts:Date.now()});
       await dbUpdateGift(g);
+      
       renderGifts(); W.$('ovModal').classList.remove('open');
       W.toast(qVal+' cota(s) reservada(s)! 🎉');
+      
       var waMsg = "Oi Gui e Ana! Parabéns pelo casamento! Passando para avisar que acabei de reservar o presente " + g.title;
       var waUrl = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsg);
-      window.open(waUrl, '_blank');
+      win.location.href = waUrl;
     });
   } else {
     mb.innerHTML='<h3>'+esc(g.title)+'</h3>'+imgH+dcH+prH+(g.type==='url'?'<p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Após a compra, confirme sua reserva abaixo.</p>':'')+'<div class="fg"><label>Seu nome</label><input id="mN" type="text" placeholder="Como quer ser identificado(a)"></div><button class="btn-main" id="btnResG">Confirmar reserva</button>';
     W.$('btnResG').addEventListener('click', async function(){
       var name=W.$('mN').value.trim(); if(!name){ W.toast('Informe seu nome.'); return; }
+      
+      // Proteção iOS + Anti-duplo clique
+      var btn = this;
+      btn.disabled = true;
+      var win = window.open('', '_blank');
+      
       g.reservedBy=name; g.reservedTs=Date.now();
       await dbUpdateGift(g);
+      
       renderGifts(); W.$('ovModal').classList.remove('open');
       W.toast('Presente reservado! 🎉');
+      
       var waMsg = "Oi Gui e Ana! Parabéns pelo casamento! Passando para avisar que acabei de reservar o presente " + g.title;
       var waUrl = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsg);
-      window.open(waUrl, '_blank');
-    });
+      win.location.href = waUrl;
+    });    
   }
   W.$('ovModal').classList.add('open');
   setTimeout(function(){ var el=W.$('mN'); if(el)el.focus(); },80);
