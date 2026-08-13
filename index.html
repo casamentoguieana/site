@@ -998,7 +998,19 @@ function gCard(g){
   }
   var imgH=g.img ?'<div class="gimg-wrap"><img src="'+esc(g.img)+'" alt="'+esc(g.title)+'" loading="lazy" onerror="this.parentElement.innerHTML=\'🎁\'"></div>':'<div class="gimg-wrap">🎁</div>';
   var badge=g.type==='quota'?'<div class="gbadge b-q">Cotas</div>':g.type==='url'?'<div class="gbadge b-u">Comprar online</div>':done?'<div class="gbadge b-d">Reservado</div>':'';
-  var prH=g.price?'<div class="gprice">R$ '+fmt(g.price)+'</div>':'';
+  
+  // Ajuste para exibir o valor por cota
+  var prH = '';
+  if(g.price){
+    if(g.type === 'quota'){
+      var totQ = parseInt(g.qtot) || 1;
+      var unitP = parseFloat(g.price) / totQ;
+      prH = '<div class="gprice">R$ '+fmt(unitP)+' <small style="font-weight:normal;font-size:11px;color:var(--text-muted)">por cota ('+totQ+' cotas)</small></div>';
+    } else {
+      prH = '<div class="gprice">R$ '+fmt(g.price)+'</div>';
+    }
+  }
+
   var ctH=g.cat?'<div class="gcat">'+esc(g.cat)+'</div>':'';
   var dcH=g.desc?'<div class="gdesc">'+esc(g.desc).replace(/\n/g,'<br>')+'</div>':'';
   var ex='';
@@ -1047,12 +1059,37 @@ function openModal(id){
   var imgH=g.img?'<img src="'+esc(g.img)+'" class="modal-img" onerror="this.style.display=\'none\'">':'';
   var dcH=g.desc?'<p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;line-height:1.65">'+esc(g.desc).replace(/\n/g,'<br>')+'</p>':'';
   var prH=g.price?'<p style="color:var(--dark-charcoal);font-weight:700;margin-bottom:10px;font-size:1rem">R$ '+fmt(g.price)+(g.type==='quota'?' / cota':'')+'</p>':'';
-  if(g.type==='quota'){
+ if(g.type==='quota'){
     var tk=g.taken||0,tot=g.qtot||1,av=tot-tk;
     var qMax=av,qVal=1;
-    mb.innerHTML='<h3>'+esc(g.title)+'</h3>'+imgH+dcH+prH+'<p style="font-size:13px;color:var(--text-muted);margin-bottom:10px"><strong>'+av+'</strong> cota(s) disponíveis de '+tot+'</p><div class="fg"><label>Seu nome</label><input id="mN" type="text" placeholder="Como quer ser identificado(a)"></div><div class="qty-row"><button class="qbtn" id="qMinus">-</button><span class="qval" id="qV">1</span><button class="qbtn" id="qPlus">+</button><span style="font-size:12px;color:var(--text-muted)">cota(s)</span></div><button class="btn-main" id="btnResQ">Confirmar reserva</button>';
-    W.$('qMinus').addEventListener('click',function(){ qVal=Math.max(1,qVal-1); W.$('qV').textContent=qVal; });
-    W.$('qPlus').addEventListener('click',function(){ qVal=Math.min(qMax,qVal+1); W.$('qV').textContent=qVal; });
+    var unitPrice = (parseFloat(g.price) || 0) / tot;
+
+    mb.innerHTML='<h3>'+esc(g.title)+'</h3>'+imgH+dcH+
+      '<div id="modalTotalPrice" style="color:var(--dark-charcoal);font-weight:700;margin-bottom:10px;font-size:1.1rem">Total a Contribuir: R$ '+fmt(unitPrice)+' <small style="font-weight:normal;font-size:12px;color:var(--text-muted)">(1 cota de R$ '+fmt(unitPrice)+')</small></div>'+
+      '<p style="font-size:13px;color:var(--text-muted);margin-bottom:14px"><strong>'+av+'</strong> cota(s) disponíveis de '+tot+' (R$ '+fmt(unitPrice)+' cada)</p>'+
+      '<div class="fg"><label>Seu nome</label><input id="mN" type="text" placeholder="Como quer ser identificado(a)"></div>'+
+      '<div class="qty-row"><button class="qbtn" id="qMinus">-</button><span class="qval" id="qV">1</span><button class="qbtn" id="qPlus">+</button><span style="font-size:12px;color:var(--text-muted)">cota(s)</span></div>'+
+      '<button class="btn-main" id="btnResQ">Confirmar reserva</button>';
+
+    var updateModalPrice = function() {
+      var total = unitPrice * qVal;
+      var priceEl = W.$('modalTotalPrice');
+      if(priceEl) {
+        priceEl.innerHTML = 'Total a Contribuir: R$ ' + fmt(total) + ' <small style="font-weight:normal;font-size:12px;color:var(--text-muted)">(' + qVal + ' cota' + (qVal>1?'s':'') + ' de R$ ' + fmt(unitPrice) + ')</small>';
+      }
+      W.$('qV').textContent = qVal;
+    };
+
+    W.$('qMinus').addEventListener('click',function(){ 
+      qVal = Math.max(1, qVal - 1); 
+      updateModalPrice(); 
+    });
+    
+    W.$('qPlus').addEventListener('click',function(){ 
+      qVal = Math.min(qMax, qVal + 1); 
+      updateModalPrice(); 
+    });
+
     W.$('btnResQ').addEventListener('click', async function(){
       var name=W.$('mN').value.trim(); if(!name){ W.toast('Informe seu nome.'); return; }
       
@@ -1069,10 +1106,10 @@ function openModal(id){
         renderGifts(); W.$('ovModal').classList.remove('open');
         W.toast(qVal+' cota(s) reservada(s)! 🎉');
         
-        var waMsg = "Oi Gui e Ana! Parabéns pelo casamento! Passando para avisar que acabei de reservar o presente " + g.title;
+        var waMsg = "Oi Gui e Ana! Parabéns pelo casamento! Passando para avisar que acabei de reservar " + qVal + " cota(s) do presente " + g.title;
         win.location.href = "https://wa.me/" + WHATSAPP_NUM + "?text=" + encodeURIComponent(waMsg);
       } catch(e) {
-        if (win) win.close(); // Fecha a aba órfã se der erro
+        if (win) win.close();
         W.toast('Erro ao salvar. Tente novamente.');
         btn.disabled = false;
       }
