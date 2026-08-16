@@ -524,12 +524,12 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
         </div>
       </div>
       <div class="filter-group">
-        <span class="filter-label">Ordenação</span>
-        <select id="sortOrder" class="sort-select">
-          <option value="asc">Menor valor primeiro</option>
-          <option value="desc">Maior valor primeiro</option>
-        </select>
-      </div>
+  <span class="filter-label">Ordenação</span>
+  <select id="sortOrder" class="sort-select">
+    <option value="desc" selected>Maior valor primeiro</option>
+    <option value="asc">Menor valor primeiro</option>
+  </select>
+</div>
     </div>
     <div class="filter-results"><span id="giftCount"></span></div>
   </div>
@@ -1442,7 +1442,6 @@ W.$('btnSaveCfg').addEventListener('click', function(){
   applyConfig(); startCD();
   W.toast('Configurações atualizadas! ✓');
 });
-
 function init(){
   try {
     var loader = document.getElementById('dbLoading');
@@ -1451,6 +1450,10 @@ function init(){
     refreshAuthUI();
     applyConfig();
     
+    // 👇 ADICIONE ESTA LINHA PARA FORÇAR O SELECT A FICAR NO MAIOR VALOR
+    var sOrder = W.$('sortOrder');
+    if(sOrder) sOrder.value = 'desc';
+
     var sGifts = W.$('sGifts');
     if(sGifts) {
       sGifts.querySelectorAll('[data-s]').forEach(function(b){
@@ -1478,6 +1481,11 @@ function init(){
         applyConfig();
         initPriceSlider();
         renderFilters();
+        
+        // 👇 GARANTA O 'DESC' TAMBÉM AQUI APÓS CARREGAR DO BANCO
+        var sOrderAsync = W.$('sortOrder');
+        if(sOrderAsync) sOrderAsync.value = 'desc';
+
         renderGifts();
         renderRSVPs();
         startCD();
@@ -1489,7 +1497,6 @@ function init(){
     });
   }
 }
-
 // ── GALLERY CAROUSEL — Nossa História (vanilla JS, cíclico) ──
 var galleryTotal = 20;
 var galleryCurrent = 1;
