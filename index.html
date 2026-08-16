@@ -429,6 +429,7 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
         </div>
       </div>
       <p class="info-addr" id="iAddr">Rua Flávio Pedrina, 500 Araçoiaba da Serra Jundiaquara, Araçoiaba da Serra - SP, 18190-000</p>
+      <p style="margin-top: 12px; font-size: 0.95rem; color: var(--text-muted); font-style: italic;">🚗 O local dispõe de estacionamento gratuito.</p>
     </div>
     <div class="info-col">
       <div class="info-icon" aria-hidden="true">
@@ -525,7 +526,6 @@ footer small{font-size:16px;letter-spacing:0.05em;opacity:.5}
       <div class="filter-group">
         <span class="filter-label">Ordenação</span>
         <select id="sortOrder" class="sort-select">
-          <option value="">Ordenação Padrão</option>
           <option value="asc">Menor valor primeiro</option>
           <option value="desc">Maior valor primeiro</option>
         </select>
@@ -707,7 +707,7 @@ const DEFAULT_CFG = {
 };
 
 var D = { cfg: Object.assign({}, DEFAULT_CFG), gifts: [], rsvps: [] };
-var gState = { cat:'todos', status:'todos', maxPrice:Infinity, sort:'' };
+var gState = { cat:'todos', status:'todos', maxPrice:Infinity, sort:'desc' };
 var _sliderBound = false;
 var prev = {}, gImgB64 = null, gImgBg = '#ffffff', editingGiftId = null;
 
@@ -1042,8 +1042,8 @@ function renderGifts(){
     var p=g.price===''||g.price===null||g.price===undefined?null:parseFloat(g.price);
     return p===null||(!isNaN(p)&&p<=gState.maxPrice);
   });
-  var sort=W.$('sortOrder').value;
-  if(sort==='asc') list.sort(function(a,b){ return (a && b) ? (parseFloat(a.price)||0)-(parseFloat(b.price)||0) : 0; });
+  var sort = W.$('sortOrder').value || 'desc';
+  if(sort==='asc') list.sort(function(a,b){ return (a && b) ? (parseFloat(a.price)||0)-(parseFloat(a.price)||0) : 0; });
   if(sort==='desc') list.sort(function(a,b){ return (a && b) ? (parseFloat(b.price)||0)-(parseFloat(a.price)||0) : 0; });
   var avail=D.gifts.filter(function(g){ return g && (g.type==='quota'?(g.taken||0)<(g.qtot||1):!g.reservedBy); }).length;
   W.$('giftCount').textContent=list.length+' presente'+(list.length!==1?'s':'')+' encontrado'+(list.length!==1?'s':'')+' · '+avail+' disponível'+(avail!==1?'is':'');
