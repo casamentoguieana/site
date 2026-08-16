@@ -1042,9 +1042,13 @@ function renderGifts(){
     var p=g.price===''||g.price===null||g.price===undefined?null:parseFloat(g.price);
     return p===null||(!isNaN(p)&&p<=gState.maxPrice);
   });
-  var sort = W.$('sortOrder').value || 'desc';
-  if(sort==='asc') list.sort(function(a,b){ return (a && b) ? (parseFloat(a.price)||0)-(parseFloat(a.price)||0) : 0; });
-  if(sort==='desc') list.sort(function(a,b){ return (a && b) ? (parseFloat(b.price)||0)-(parseFloat(a.price)||0) : 0; });
+  var sort = W.$('sortOrder').value;
+  if(sort === 'asc') {
+    list.sort(function(a,b){ return (a && b) ? (parseFloat(a.price)||0)-(parseFloat(b.price)||0) : 0; });
+  } else {
+    // Padrão ou 'desc': Do mais caro para o mais barato
+    list.sort(function(a,b){ return (a && b) ? (parseFloat(b.price)||0)-(parseFloat(a.price)||0) : 0; });
+  }
   var avail=D.gifts.filter(function(g){ return g && (g.type==='quota'?(g.taken||0)<(g.qtot||1):!g.reservedBy); }).length;
   W.$('giftCount').textContent=list.length+' presente'+(list.length!==1?'s':'')+' encontrado'+(list.length!==1?'s':'')+' · '+avail+' disponível'+(avail!==1?'is':'');
   if(!list.length){ grid.innerHTML='<div class="empty">Nenhum presente'+(D.gifts.length?' encontrado com esses filtros.':' ainda.<br><small style="color:var(--text-muted)">Acesse o painel restrito para cadastrar.</small>')+'</div>'; return; }
