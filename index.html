@@ -1105,7 +1105,7 @@ function openModal(id){
         g.taken=(g.taken||0)+qVal;
         if(!g.reservations)g.reservations=[];
         g.reservations.push({name:name,qty:qVal,ts:Date.now()});
-        await dbUpdateGift(g);
+        await sb.rpc('reservar_presente', { p_id: g.id, p_nome: name });
         
         renderGifts(); W.$('ovModal').classList.remove('open');
         W.toast(qVal+' cota(s) reservada(s)! 🎉');
@@ -1129,7 +1129,7 @@ function openModal(id){
       
       try {
         g.reservedBy=name; g.reservedTs=Date.now();
-        await dbUpdateGift(g);
+        await sb.rpc('reservar_presente', { p_id: g.id, p_nome: name });
         
         renderGifts(); W.$('ovModal').classList.remove('open');
         W.toast('Presente reservado! 🎉');
